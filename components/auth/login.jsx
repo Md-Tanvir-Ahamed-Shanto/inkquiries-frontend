@@ -1,0 +1,222 @@
+"use client";
+import React, { useState } from "react";
+import Image from "next/image";
+import AuthImage from "@/public/assets/authimage.png";
+import Link from "next/link";
+import { useRouter } from 'next/navigation';
+import { FaApple } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { loginUser } from "../../service/authApi"; 
+import { toast } from "sonner";
+import { FaFacebook, FaInstagram } from "react-icons/fa6";
+// import { setCookie } from "cookies-next";
+// import { getCookie } from "cookies-next";
+
+
+
+const LoginPage = () => {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    setError(null);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    // Basic client-side validation
+    if (!formData.email || !formData.password) {
+      return setError("Email and password are required.");
+    }
+
+    setIsLoading(true);
+
+    try {
+      const res = await loginUser(formData);  
+      localStorage.setItem("token", res.token);
+      localStorage.setItem("user", JSON.stringify(res.user));
+      if(res.user.role === "artist"){
+        router.push("/artist/dashboard");
+      } else if(res.user.role === "admin"){
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
+      toast.success("Login successful!");
+    } catch (err) {
+      console.error("Login failed:", err);
+      toast.error(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const [activeUserType, setActiveUserType] = useState("Client");
+
+  const handleSocialLogin = (provider) => {
+    // Redirect to OAuth provider with role parameter
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+    const role = activeUserType.toLowerCase();
+    window.location.href = `${backendUrl}/auth/${provider}?role=${role}`;
+  };
+
+  const formFields = [
+    { label: "Enter Email", name: "email", icon: <Mail size={16} /> },
+    { label: "Password", name: "password", icon: <Lock size={16} /> },
+  ];
+
+  return (
+    <div className="flex flex-col md:flex-row min-h-screen bg-white overflow-hidden">
+      {/* Login Form Section */}
+      <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12">
+        <div className="w-full max-w-md">
+          <div className="mb-8 md:mb-12">
+            <h1 className="text-neutral-800 text-3xl md:text-4xl font-bold font-['Inter'] leading-tight mb-2">
+              Welcome back
+            </h1>
+            <p className="text-neutral-800 text-base font-normal leading-normal tracking-tight">
+              We're excited to see you again! Please log in to continue.
+            </p>
+          </div>
+
+          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <div className="flex gap-2 mb-4">
+              <button
+                type="button"
+                className={`flex-1 h-12 px-6 py-4 bg-slate-50 rounded-lg flex justify-center items-center gap-2.5 text-zinc-950 text-base font-semibold font-['Inter'] leading-normal ${
+                  activeUserType === "Client"
+                    ? " outline-[1.50px] outline-offset-[-1.50px] outline-black"
+                    : ""
+                }`}
+                onClick={() => setActiveUserType("Client")}
+              >
+                Client
+              </button>
+              <button
+                type="button"
+                className={`flex-1 h-12 px-6 py-4 bg-slate-50 rounded-lg flex justify-center items-center gap-2.5 text-zinc-950 text-base font-semibold font-['Inter'] leading-normal ${
+                  activeUserType === "Artist"
+                    ? " outline-[1.50px] outline-offset-[-1.50px] outline-black"
+                    : ""
+                }`}
+                onClick={() => setActiveUserType("Artist")}
+              >
+                Artist
+              </button>
+            </div>
+            {formFields.map((field) => (
+              <div
+                key={field.name}
+                className="self-stretch h-14 p-3.5 bg-white rounded-lg  outline-1 outline-offset-[-1px] outline-zinc-200 inline-flex justify-start items-center gap-5"
+              >
+                <div className="w-4 h-4 relative flex items-center justify-center text-gray-950">
+                  {field.icon}
+                </div>
+                <input
+                  type={
+                    field.name === "password" && showPassword
+                      ? "text"
+                      : field.name === "password"
+                      ? "password"
+                      : "text"
+                  }
+                  name={field.name}
+                  placeholder={field.label}
+                  value={formData[field.name]}
+                  onChange={handleChange}
+                  className="flex-grow text-zinc-500 text-base font-normal leading-tight focus:outline-none"
+                />
+                {field.name === "password" && (
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="flex-shrink-0 text-zinc-500"
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                )}
+              </div>
+            ))}
+
+            <div className="self-stretch text-right mb-4">
+              <span className="text-gray-600 text-base font-medium  leading-normal tracking-tight cursor-pointer">
+                <Link href={"/forgot-password"}>Forgot password?</Link>
+              </span>
+            </div>
+
+            <button
+              type="submit"
+              className="self-stretch h-12 px-6 py-4 bg-zinc-950 rounded-lg inline-flex justify-center items-center gap-2.5 text-white text-base font-semibold font-['Inter'] leading-normal"
+              disabled={isLoading}
+            >
+              {isLoading ? "Logging in..." : "Login"}
+            </button>
+
+            <div className="self-stretch text-center text-neutral-600 text-base font-medium leading-normal tracking-tight">
+              - Or -
+            </div>
+
+            <div className="flex gap-4">
+               <button
+                type="button"
+                className="flex-1 cursor-pointer h-12 px-6 py-4 bg-gray-100 rounded-lg flex justify-center items-center gap-2.5 text-zinc-950 text-base font-semibold font-['Inter'] leading-normal"
+                onClick={() => handleSocialLogin("facebook")} // You'll need to implement a 'facebook' endpoint
+              >
+                <FaFacebook size={16} /> Facebook
+              </button>
+              <button
+                type="button"
+                className="flex-1 cursor-pointer h-12 px-6 py-4 bg-gray-100 rounded-lg flex justify-center items-center gap-2.5 text-zinc-950 text-base font-semibold font-['Inter'] leading-normal"
+                onClick={() => handleSocialLogin("instagram")} // You'll need to implement an 'instagram' endpoint
+              >
+                <FaInstagram size={16} /> Instagram
+              </button>
+            </div>
+
+            <div className="self-stretch text-center">
+              <span className="text-neutral-600 text-base font-medium  leading-normal tracking-tight">
+                Don't have an account?{" "}
+              </span>
+              <span className="text-gray-600 text-base font-medium  leading-normal tracking-tight cursor-pointer">
+                <Link href={"/signup"}>Sign up</Link>
+              </span>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* Image Section */}
+      <div className="hidden md:flex flex-1 justify-center items-center p-6 rounded-xl">
+        <Image
+          src={AuthImage}
+          alt="auth"
+          width={668}
+          height={892}
+          className="max-w-xl h-auto object-contain rounded-xl"
+        />
+      </div>
+    </div>
+  );
+};
+
+export default LoginPage;
