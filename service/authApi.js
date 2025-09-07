@@ -102,6 +102,55 @@ export const registerClient = async (data) => {
   }
 };
 
+/**
+ * Request a password reset email
+ * @param {string} email - The user's email address
+ * @returns {Promise<Object>} - Response from the API
+ */
+export const forgotPassword = async (email) => {
+  try {
+    const res = await apiFetch("/api/auth/forgot-password", "POST", { email });
+    return res;
+  } catch (error) {
+    console.error("Failed to request password reset:", error.message);
+    throw error;
+  }
+};
+
+/**
+ * Verify if a reset token is valid
+ * @param {string} token - The reset token
+ * @param {string} userType - The user type (admin, client, or artist)
+ * @returns {Promise<Object>} - Response from the API
+ */
+export const verifyResetToken = async (token, userType) => {
+  try {
+    const res = await apiFetch(`/api/auth/verify-reset-token/${token}/${userType}`, "GET");
+    return res;
+  } catch (error) {
+    console.error("Failed to verify reset token:", error.message);
+    throw error;
+  }
+};
+
+/**
+ * Reset password with token
+ * @param {Object} data - The reset data
+ * @param {string} data.token - The reset token
+ * @param {string} data.password - The new password
+ * @param {string} data.userType - The user type (admin, client, or artist)
+ * @returns {Promise<Object>} - Response from the API
+ */
+export const resetPassword = async (data) => {
+  try {
+    const res = await apiFetch("/api/auth/reset-password", "POST", data);
+    return res;
+  } catch (error) {
+    console.error("Failed to reset password:", error.message);
+    throw error;
+  }
+};
+
 export const claimArtistAccount = async (data) => {
   try {
     const res = await apiFetch("/api/artists/claim", "POST", data);

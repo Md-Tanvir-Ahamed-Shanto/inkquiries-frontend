@@ -3,19 +3,37 @@ import React, { useState } from "react";
 import Image from "next/image";
 import AuthImage from "@/public/assets/authimage.png";
 import { Mail } from "lucide-react";
+import { forgotPassword } from "@/service/authApi";
+import { toast } from "react-hot-toast";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Forgot password submitted with email:", email);
-    // Add your logic to send a password reset link
-    alert(`Password reset link sent to: ${email}`);
+    
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
+    }
+    
+    setIsLoading(true);
+    
+    try {
+      const response = await forgotPassword(email);
+      toast.success("If your email is registered, you will receive a password reset link");
+    } catch (error) {
+      // Still show success message even on error for security reasons
+      toast.success("If your email is registered, you will receive a password reset link");
+      console.error("Error requesting password reset:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -49,16 +67,17 @@ const ForgotPasswordPage = () => {
 
             <button
               type="submit"
-              className="self-stretch h-12 px-6 py-4 bg-zinc-950 rounded-lg inline-flex justify-center items-center gap-2.5 text-white text-base font-semibold font-['Inter'] leading-normal"
+              disabled={isLoading}
+              className={`self-stretch h-12 px-6 py-4 bg-zinc-950 rounded-lg inline-flex justify-center items-center gap-2.5 text-white text-base font-semibold font-['Inter'] leading-normal ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
-              Send recovery link
+              {isLoading ? "Sending..." : "Send recovery link"}
             </button>
           </form>
 
           <div className="self-stretch text-center mt-6">
-            <span className="text-neutral-600 text-base font-medium  leading-normal tracking-tight cursor-pointer">
+            <a href="/login" className="text-neutral-600 text-base font-medium leading-normal tracking-tight cursor-pointer hover:underline">
               Back to Log in
-            </span>
+            </a>
           </div>
         </div>
       </div>
