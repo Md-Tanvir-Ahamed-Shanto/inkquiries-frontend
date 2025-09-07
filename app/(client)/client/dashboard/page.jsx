@@ -69,8 +69,7 @@ const ClientDashboard = () => {
           <img
             className="w-24 h-24 sm:w-28 sm:h-28 rounded-full outline outline-gray-100"
             src={
-              `${baseUrl}${profile?.profilePhoto}` ||
-              "https://placehold.co/112x112"
+             profile?.profilePhoto ? `${baseUrl}${profile?.profilePhoto}` : "https://cdn-icons-png.flaticon.com/512/0/93.png"
             }
             alt="Profile Picture"
           />

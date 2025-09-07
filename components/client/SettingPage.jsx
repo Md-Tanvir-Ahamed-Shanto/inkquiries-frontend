@@ -1,10 +1,11 @@
 "use client";
-import { deleteProfilePhoto, getClientProfile, updateClientProfile, uploadClientProfilePhoto } from "@/service/clientApi";
+import { changePasswordClient, deleteClientAccount, deleteProfilePhoto, disableClientAccount, getClientProfile, updateClientProfile, uploadClientProfilePhoto } from "@/service/clientApi";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Modal from "../common/Modal";
 import DeleteModal from "../common/DeleteModal";
 import DisableModal from "../common/DisableModal";
+import { changePassword } from "@/service/profileApi";
 
 const SettingPage = ({onSubmit}) => {
     const [profile, setProfile] = useState(null);
@@ -141,7 +142,11 @@ const SettingPage = ({onSubmit}) => {
     setSecuritySuccess(null);
     
     try {
-      const response = await changeEmail(profile.id, securityData.newEmail, securityData.emailPassword);
+      const data = {
+        newEmail: securityData.newEmail,
+        password: securityData.emailPassword,
+      }
+      const response = await changeEmail(profile.id,data);
       setSecuritySuccess('Email updated successfully');
       // Update the form data with the new email
       setFormData(prev => ({ ...prev, email: securityData.newEmail }));
@@ -166,12 +171,12 @@ const SettingPage = ({onSubmit}) => {
     }
     
     try {
-      await changePassword(
-        artistId, 
-        securityData.currentPassword, 
-        securityData.newPassword, 
-        securityData.confirmPassword
-      );
+      const data = {
+        currentPassword: securityData.currentPassword,
+        newPassword: securityData.newPassword,
+        confirmPassword: securityData.confirmPassword,
+      }
+      await changePasswordClient(profile.id, data);
       setSecuritySuccess('Password updated successfully');
       // Clear the form fields
       setSecurityData(prev => ({ 
@@ -189,7 +194,7 @@ const SettingPage = ({onSubmit}) => {
   
   const handleDisableAccount = async () => {
     try {
-      await disableArtistAccount(artistId);
+      await disableClientAccount(profile.id);
       // Redirect to logout or login page
       localStorage.removeItem('user');
       localStorage.removeItem('token');
@@ -201,7 +206,7 @@ const SettingPage = ({onSubmit}) => {
   
   const handleDeleteAccount = async () => {
     try {
-      await deleteArtistAccount(artistId);
+      await deleteClientAccount(profile.id);
       // Redirect to logout or login page
       localStorage.removeItem('user');
       localStorage.removeItem('token');

@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { verifyResetToken, resetPassword } from "@/service/authApi";
 import { toast } from "react-hot-toast";
 
-const SetPasswordPage = () => {
+const ResetPasswordPage = ({ slug }) => {   
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -22,8 +22,9 @@ const SetPasswordPage = () => {
   const searchParams = useSearchParams();
   
   useEffect(() => {
-    const token = searchParams.get("token");
+    const token = slug;
     const userType = searchParams.get("type");
+    console.log(token, userType, slug);
     
     if (!token || !userType) {
       toast.error("Invalid password reset link");
@@ -222,4 +223,4 @@ const SetPasswordPage = () => {
   );
 };
 
-export default SetPasswordPage;
+export default ResetPasswordPage;

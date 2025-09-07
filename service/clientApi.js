@@ -153,5 +153,45 @@ export const createReview = async (artistId, reviewData, photoFiles) => {
   }
 };
 
+export const changeEmailClient = async (clientId, data) => {
+  try {
+    const response = await apiFetch(`/api/clients/${clientId}/change-email`, "PUT", data);
+    return response;
+  } catch (error) {
+    console.error("Failed to change client email:", error.message);
+    throw error;
+  }
+}
+
+export const changePasswordClient = async (clientId, data) => {
+  try {
+    const response = await apiFetch(`/api/clients/${clientId}/change-password`, "PUT", data);
+    return response;
+  } catch (error) {
+    console.error("Failed to change client password:", error.message);
+    throw error;
+  }
+}
+
+export const disableClientAccount = async (clientId) => {
+  try {
+    const response = await apiFetch(`/api/clients/${clientId}/disable`, "PUT");
+    return response;
+  } catch (error) {
+    console.error("Failed to disable client account:", error.message);
+    throw error;
+  }
+}
+
+export const deleteClientAccount = async (clientId) => {
+  try {
+    const response = await apiFetch(`/api/clients/${clientId}`, "DELETE");
+    return response;
+  } catch (error) {
+    console.error("Failed to delete client account:", error.message);
+    throw error;
+  }
+}
+
 // Note: The uploadReviewPhotos function has been integrated into the createReview function
 // to handle photos and review data in a single request
