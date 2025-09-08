@@ -4,7 +4,7 @@ const nextConfig = {
     domains: ['localhost', 'res.cloudinary.com', 'cdn-icons-png.flaticon.com','http://api.inkquiries.org/','https://api.inkquiries.org/'],
   },
   env: {
-    NEXT_PUBLIC_API_URL: 'http://localhost:5000',
+    NEXT_PUBLIC_API_URL: 'https://api.inkquiries.org',
   },
 };
 

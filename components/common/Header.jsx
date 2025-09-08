@@ -19,7 +19,7 @@ const Header = () => {
   const [loading, setLoading] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.inkquiries.org"
   
   useEffect(() => {
     const currentUser = getCurrentUser();
