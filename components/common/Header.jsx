@@ -17,7 +17,7 @@ const Header = () => {
   const [user, setUser] = useState(null);
   const [notificationCount, setNotificationCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
   
@@ -25,6 +25,7 @@ const Header = () => {
     const currentUser = getCurrentUser();
     console.log("user",currentUser)
     setUser(currentUser);
+    setLoading(false);
   }, []);
   
   // Fetch notifications when user is logged in
@@ -172,131 +173,142 @@ const Header = () => {
 
       {/* Desktop Auth/Profile Section */}
       <div className="hidden lg:inline-flex justify-start items-center gap-3" suppressHydrationWarning>
-         <div className="relative notification-menu-container" suppressHydrationWarning>
-              <button 
-                className="p-2 bg-gray-100 rounded-full cursor-pointer hover:bg-gray-200 hover:rounded-full" 
-                suppressHydrationWarning
-                onClick={() => setIsNotificationMenuOpen(!isNotificationMenuOpen)}
-              >
-                <IoNotificationsOutline className="w-5 h-5 text-zinc-950" />
-                {/* Dynamic Notification Count Badge */}
-                {notificationCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gray-900 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center" suppressHydrationWarning>
-                    {notificationCount > 9 ? '9+' : notificationCount}
-                  </span>
-                )}
-              </button>
-              
-              {/* Notification Dropdown */}
-              {isNotificationMenuOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200 notification-menu-container">
-                  <div className="px-4 py-2 border-b border-gray-100">
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-sm font-semibold">Notifications</h3>
-                      {notificationCount > 0 && (
-                        <button 
-                          onClick={handleMarkAllAsRead}
-                          className="text-xs text-gray-600 hover:text-gray-800"
-                        >
-                          Mark all as read
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className="max-h-80 overflow-y-auto">
-                    {loading ? (
-                      <div className="px-4 py-3 text-sm text-gray-500 text-center">Loading...</div>
-                    ) : notifications.length > 0 ? (
-                      notifications.map((notification) => (
-                        <div 
-                          key={notification.id} 
-                          className={`px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${!notification.read ? 'bg-gray-50' : ''}`}
-                          onClick={() => handleNotificationClick(notification)}
-                        >
-                          <div className="text-sm">{notification.message}</div>
-                          <div className="text-xs text-gray-500 mt-1">
-                            {new Date(notification.createdAt).toLocaleString()}
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="px-4 py-3 text-sm text-gray-500 text-center">No notifications</div>
-                    )}
-                  </div>
-                  
-                  {notifications.length > 0 && (
-                    <div className="px-4 py-2 border-t border-gray-100">
-                      <Link href={user?.role === 'admin' ? '/admin/notifications' : 
-                                  user?.role === 'artist' ? '/artist/dashboard?tab=notification' : 
-                                  '/client/dashboard?tab=notification'}
-                      >
-                        <div className="text-xs text-center text-gray-600 hover:text-gray-800">
-                          View all notifications
-                        </div>
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-        {user ? (
-          <div className="relative" suppressHydrationWarning>
-            <button
-              onClick={toggleProfileMenu}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg "
-              suppressHydrationWarning
-            >
-               <div className="w-8 h-8 rounded-full overflow-hidden cursor-pointer bg-gray-200 flex items-center justify-center" suppressHydrationWarning>
-                  {user?.profilePhoto ? (
-                    <Image
-                      src={user?.profilePhoto ? `${backendUrl}${user.profilePhoto}` : '/placeholder-image.svg'} 
-                      alt="User Avatar" 
-                      width={32} 
-                      height={32} 
-                      className="object-cover"
-                    />
-                  ) : (
-                    <User2Icon className="w-5 h-5 text-gray-500" />
-                  )}
-                </div>
-            </button>
-
-            {/* Profile Dropdown Menu */}
-            {isProfileMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50" suppressHydrationWarning>
-                <button
-                  onClick={handleProfileClick}
-                  className="w-full text-left px-4 py-2 text-zinc-950 hover:bg-gray-100"
-                >
-                  Profile
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-zinc-950 hover:bg-gray-100"
-                >
-                  Logout
-                </button>
-              </div>
-            )}
+        {loading ? (
+          <div className="flex items-center gap-3">
+            <div className="w-28 h-12 bg-gray-100 rounded-lg animate-pulse"></div>
+            <div className="w-28 h-12 bg-zinc-300 rounded-lg animate-pulse"></div>
           </div>
         ) : (
           <>
-            <Link href="/signup">
-              <div className="w-28 px-6 py-3 bg-gray-100 rounded-lg flex justify-center items-center gap-2.5 cursor-pointer" suppressHydrationWarning>
-                <div className="justify-start text-zinc-950 text-base font-medium capitalize leading-normal" suppressHydrationWarning>
-                  Signup
-                </div>
+            {user && (
+              <div className="relative notification-menu-container" suppressHydrationWarning>
+                <button 
+                  className="p-2 bg-gray-100 rounded-full cursor-pointer hover:bg-gray-200 hover:rounded-full" 
+                  suppressHydrationWarning
+                  onClick={() => setIsNotificationMenuOpen(!isNotificationMenuOpen)}
+                >
+                  <IoNotificationsOutline className="w-5 h-5 text-zinc-950" />
+                  {/* Dynamic Notification Count Badge */}
+                  {notificationCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-gray-900 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center" suppressHydrationWarning>
+                      {notificationCount > 9 ? '9+' : notificationCount}
+                    </span>
+                  )}
+                </button>
+                
+                {/* Notification Dropdown */}
+                {isNotificationMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200 notification-menu-container">
+                    <div className="px-4 py-2 border-b border-gray-100">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-sm font-semibold">Notifications</h3>
+                        {notificationCount > 0 && (
+                          <button 
+                            onClick={handleMarkAllAsRead}
+                            className="text-xs text-gray-600 hover:text-gray-800"
+                          >
+                            Mark all as read
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="max-h-80 overflow-y-auto">
+                      {loading ? (
+                        <div className="px-4 py-3 text-sm text-gray-500 text-center">Loading...</div>
+                      ) : notifications.length > 0 ? (
+                        notifications.map((notification) => (
+                          <div 
+                            key={notification.id} 
+                            className={`px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${!notification.read ? 'bg-gray-50' : ''}`}
+                            onClick={() => handleNotificationClick(notification)}
+                          >
+                            <div className="text-sm">{notification.message}</div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              {new Date(notification.createdAt).toLocaleString()}
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="px-4 py-3 text-sm text-gray-500 text-center">No notifications</div>
+                      )}
+                    </div>
+                    
+                    {notifications.length > 0 && (
+                      <div className="px-4 py-2 border-t border-gray-100">
+                        <Link href={user?.role === 'admin' ? '/admin/notifications' : 
+                                    user?.role === 'artist' ? '/artist/dashboard?tab=notification' : 
+                                    '/client/dashboard?tab=notification'}
+                        >
+                          <div className="text-xs text-center text-gray-600 hover:text-gray-800">
+                            View all notifications
+                          </div>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
-            </Link>
-            <Link href="/login">
-              <div className="w-28 px-6 py-3 bg-zinc-950 rounded-lg flex justify-center items-center gap-2.5 cursor-pointer" suppressHydrationWarning>
-                <div className="justify-start text-white text-base font-medium capitalize leading-normal" suppressHydrationWarning>
-                  Login
-                </div>
+            )}
+
+            {user ? (
+              <div className="relative" suppressHydrationWarning>
+                <button
+                  onClick={toggleProfileMenu}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg "
+                  suppressHydrationWarning
+                >
+                  <div className="w-8 h-8 rounded-full overflow-hidden cursor-pointer bg-gray-200 flex items-center justify-center" suppressHydrationWarning>
+                    {user?.profilePhoto ? (
+                      <Image
+                        src={user?.profilePhoto ? `${backendUrl}${user.profilePhoto}` : '/placeholder-image.svg'} 
+                        alt="User Avatar" 
+                        width={32} 
+                        height={32} 
+                        className="object-cover"
+                      />
+                    ) : (
+                      <User2Icon className="w-5 h-5 text-gray-500" />
+                    )}
+                  </div>
+                </button>
+
+                {/* Profile Dropdown Menu */}
+                {isProfileMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50" suppressHydrationWarning>
+                    <button
+                      onClick={handleProfileClick}
+                      className="w-full text-left px-4 py-2 text-zinc-950 hover:bg-gray-100"
+                    >
+                      Profile
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-zinc-950 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
-            </Link>
+            ) : (
+              <>
+                <Link href="/signup">
+                  <div className="w-28 px-6 py-3 bg-gray-100 rounded-lg flex justify-center items-center gap-2.5 cursor-pointer" suppressHydrationWarning>
+                    <div className="justify-start text-zinc-950 text-base font-medium capitalize leading-normal" suppressHydrationWarning>
+                      Signup
+                    </div>
+                  </div>
+                </Link>
+                <Link href="/login">
+                  <div className="w-28 px-6 py-3 bg-zinc-950 rounded-lg flex justify-center items-center gap-2.5 cursor-pointer" suppressHydrationWarning>
+                    <div className="justify-start text-white text-base font-medium capitalize leading-normal" suppressHydrationWarning>
+                      Login
+                    </div>
+                  </div>
+                </Link>
+              </>
+            )}
           </>
         )}
       </div>
@@ -366,7 +378,12 @@ const Header = () => {
 
           {/* Mobile Auth/Profile Section */}
           <div className="flex flex-col items-center gap-4 w-full px-4" suppressHydrationWarning>
-            {user ? (
+            {loading ? (
+              <>
+                <div className="w-full max-w-xs h-16 bg-gray-100 rounded-lg animate-pulse"></div>
+                <div className="w-full max-w-xs h-16 bg-zinc-300 rounded-lg animate-pulse"></div>
+              </>
+            ) : user ? (
               <>
                 <button
                   onClick={handleProfileClick}
