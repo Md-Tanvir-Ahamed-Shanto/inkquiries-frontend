@@ -8,6 +8,7 @@ import { User, User2Icon } from "lucide-react";
 import { BiNotification } from "react-icons/bi";
 import { IoNotificationsOutline } from "react-icons/io5";
 import Image from "next/image";
+import backendUrl from "@/utils/baseUrl";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -19,7 +20,6 @@ const Header = () => {
   const [loading, setLoading] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.inkquiries.org"
   
   useEffect(() => {
     const currentUser = getCurrentUser();
@@ -251,7 +251,7 @@ const Header = () => {
                <div className="w-8 h-8 rounded-full overflow-hidden cursor-pointer bg-gray-200 flex items-center justify-center" suppressHydrationWarning>
                   {user?.profilePhoto ? (
                     <Image
-                      src={user?.profilePhoto ? `${baseUrl}${user.profilePhoto}` : '/placeholder-image.svg'} 
+                      src={user?.profilePhoto ? `${backendUrl}${user.profilePhoto}` : '/placeholder-image.svg'} 
                       alt="User Avatar" 
                       width={32} 
                       height={32} 

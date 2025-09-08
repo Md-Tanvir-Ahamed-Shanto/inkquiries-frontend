@@ -18,7 +18,6 @@ import backendUrl from "@/utils/baseUrl";
 const Page = () => {
   const [user, setUser] = useState(null);
   const [artistId, setArtistId] = useState(null);
-  const baseUrl = backendUrl;
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -120,7 +119,7 @@ console.log("profile data",profile)
           {
             profile?.profilePhoto ? (
               <Image
-                src={profile?.profilePhoto ? `${baseUrl}${profile.profilePhoto}` : '/placeholder-image.svg'}
+                src={profile?.profilePhoto ? `${backendUrl}${profile.profilePhoto}` : '/placeholder-image.svg'}
                 alt="Profile"
                 width={80}
                 height={80}
