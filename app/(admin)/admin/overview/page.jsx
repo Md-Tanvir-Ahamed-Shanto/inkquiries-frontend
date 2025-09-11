@@ -153,7 +153,7 @@ const Page = () => {
                   <h2 className="text-gray-800 text-lg sm:text-xl font-semibold font-['Inter'] leading-relaxed tracking-tight">
                     Recent Activity
                   </h2>
-                  {notifications.filter(n => !n.read && n.userType === 'admin').length > 0 && (
+                  {/* {notifications.filter(n => !n.read && n.userType === 'admin').length > 0 && (
                     <button 
                       onClick={async () => {
                         try {
@@ -168,7 +168,7 @@ const Page = () => {
                     >
                       Mark all as read
                     </button>
-                  )}
+                  )} */}
                 </div>
                 <div className="h-px bg-violet-300 rounded-full mt-2" />
               </div>

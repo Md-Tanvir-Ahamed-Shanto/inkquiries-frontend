@@ -176,14 +176,14 @@ function Notification() {
           )}
         </div>
         
-        {notifications.length > 0 && (
+        {/* {notifications.length > 0 && (
           <button
             onClick={handleMarkAllAsRead}
             className="px-4 py-2 bg-white rounded-lg cursor-pointer border border-gray-100 text-sm font-medium hover:bg-gray-50 transition-colors"
           >
             Mark all as read
           </button>
-        )}
+        )} */}
       </div>
       
       <div className="flex flex-col gap-3 mt-4 md:mt-6">

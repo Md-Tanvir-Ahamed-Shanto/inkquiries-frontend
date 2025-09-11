@@ -202,14 +202,14 @@ const Header = () => {
                     <div className="px-4 py-2 border-b border-gray-100">
                       <div className="flex justify-between items-center">
                         <h3 className="text-sm font-semibold">Notifications</h3>
-                        {notificationCount > 0 && (
+                        {/* {notificationCount > 0 && (
                           <button 
                             onClick={handleMarkAllAsRead}
                             className="text-xs cursor-pointer text-gray-600 hover:text-gray-800"
                           >
                             Mark all as read
                           </button>
-                        )}
+                        )} */}
                       </div>
                     </div>
                     

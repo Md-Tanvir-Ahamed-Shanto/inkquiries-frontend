@@ -43,11 +43,9 @@ function HeaderAdmin({ onMenuClick }) {
       {/* Right Section */}
       <div className="flex items-center gap-1 sm:gap-3">
 
-        {/* Bell Icon */}
-        <img src="/icon/bell.svg" className="w-5 h-5 sm:w-6 sm:h-6" />
 
         {/* Profile */}
-        <div className="p-1 sm:p-2 rounded-3xl outline-1 outline-offset-[-1px] outline-gray-100 flex items-center gap-1 sm:gap-2">
+        <div className="p-1 sm:p-2 cursor-pointer rounded-3xl outline-1 outline-offset-[-1px] outline-gray-100 flex items-center gap-1 sm:gap-2">
           <img
             src={admin?.profilePhoto ? `${backendUrl}${admin?.profilePhoto}` : "/images/profile.png"}
             alt="User Profile"
@@ -60,7 +58,6 @@ function HeaderAdmin({ onMenuClick }) {
               {admin?.name || 'Admin'}
             </p>
           </div>
-          <img src="/icon/arrow-down.svg" className="cursor-pointer w-3 sm:w-4" />
         </div>
       </div>
     </div>

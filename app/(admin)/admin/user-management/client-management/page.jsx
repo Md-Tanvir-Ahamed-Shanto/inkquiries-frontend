@@ -245,11 +245,7 @@ export default function ClientTable() {
                   Joined
                 </div>
               </th>
-              <th className="w-[20%] min-w-[192px] h-16 px-3 py-6 bg-slate-50 flex items-center">
-                <div className="text-neutral-600 text-sm font-medium uppercase leading-none">
-                  Last login
-                </div>
-              </th>
+              
               <th className="w-[10%] min-w-[128px] h-16 px-3 py-6 bg-slate-50 flex items-center">
                 <div className="text-neutral-600 text-sm font-medium font-['Inter'] uppercase leading-none">
                   Action
@@ -324,12 +320,8 @@ export default function ClientTable() {
                   </div>
                 </td>
 
-                {/* Last Login */}
-                <td className="w-[20%] min-w-[192px] h-16 px-3 py-6 bg-white flex items-center">
-                  <div className="text-neutral-600 text-sm font-normal capitalize leading-none">
-                    {client.lastLogin ? `${format(new Date(client.lastLogin), 'dd MMM yyyy')} (${format(new Date(client.lastLogin), 'hh:mm a')})` : 'N/A'}
-                  </div>
-                </td>
+               
+               
 
                 {/* Action */}
                 <td className="w-[10%] min-w-[180px] h-16 px-3 py-6 bg-white flex items-center gap-3">
@@ -404,11 +396,7 @@ export default function ClientTable() {
                 Joined
               </div>
             </div>
-            <div className="w-[180px] h-12 px-2 py-3 bg-slate-50 flex items-center border-r border-gray-200">
-              <div className="text-neutral-600 text-xs font-medium uppercase leading-none">
-                Last login
-              </div>
-            </div>
+           
             <div className="w-[120px] h-12 px-2 py-3 bg-slate-50 flex items-center">
               <div className="text-neutral-600 text-xs font-medium uppercase leading-none">
                 Action
@@ -481,12 +469,7 @@ export default function ClientTable() {
                 </div>
               </div>
 
-              {/* Last Login */}
-              <div className="w-[180px] h-12 px-2 py-3 bg-white flex items-center border-r border-gray-200">
-                <div className="text-neutral-600 text-xs font-normal capitalize leading-none truncate">
-                  {client.lastLogin ? `${format(new Date(client.lastLogin), 'dd MMM yyyy')} (${format(new Date(client.lastLogin), 'hh:mm a')})` : 'N/A'}
-                </div>
-              </div>
+              
 
               {/* Action */}
               <div className="w-[120px] h-12 px-2 py-3 bg-white flex items-center">

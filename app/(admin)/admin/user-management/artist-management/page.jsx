@@ -322,7 +322,7 @@ useEffect(() => {
           <table className="w-full">
             {/* Table Header */}
             <thead>
-              <tr className="w-full flex">
+              <tr className="w-full flex items-center">
                 <th className="w-[20%] min-w-[192px] h-16 px-3 py-6 bg-slate-50 flex items-center">
                   <div className="text-neutral-600 text-sm font-medium font-['Inter'] uppercase leading-none">
                     Artist name
@@ -361,7 +361,7 @@ useEffect(() => {
               {artists.map((artist) => (
                 <tr
                   key={artist.id}
-                  className="w-full flex border-t border-zinc-200"
+                  className="w-full flex border-t items-center justify-center border-zinc-200"
                 >
                   {/* Artist Name */}
                   <td className="w-[20%] min-w-[192px] h-16 px-3 py-6 bg-white flex items-center gap-2.5">
