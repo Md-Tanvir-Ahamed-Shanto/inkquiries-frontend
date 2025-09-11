@@ -162,7 +162,7 @@ const Page = () => {
                           console.error("Failed to mark all notifications as read:", error);
                         }
                       }}
-                      className="text-xs text-gray-600 hover:text-gray-800"
+                      className="text-xs text-gray-600 cursor-pointer hover:text-gray-800"
                     >
                       Mark all as read
                     </button>

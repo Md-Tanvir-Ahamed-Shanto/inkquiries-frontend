@@ -90,9 +90,9 @@ const ClientDashboard = () => {
             className="w-full sm:w-auto px-5 py-3 bg-zinc-950 rounded-lg inline-flex justify-center items-center gap-2.5"
           >
             <div className="w-5 h-5 relative">
-              <div className="w-4 h-4 left-[1.66px] top-[1.67px] absolute outline outline-[1.25px] outline-offset-[-0.62px] outline-white" />
-              <div className="w-1.5 h-1.5 left-[10.84px] top-[3.33px] absolute outline outline-[1.25px] outline-offset-[-0.62px] outline-white" />
-              <div className="w-1.5 h-0 left-[11.66px] top-[18.33px] absolute outline outline-[1.25px] outline-offset-[-0.62px] outline-white" />
+              <div className="w-4 h-4 left-[1.66px] top-[1.67px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
+              <div className="w-1.5 h-1.5 left-[10.84px] top-[3.33px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
+              <div className="w-1.5 h-0 left-[11.66px] top-[18.33px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
             </div>
             <div className="text-white text-base font-medium capitalize leading-normal">
               Create Review Post

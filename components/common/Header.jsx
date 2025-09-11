@@ -205,7 +205,7 @@ const Header = () => {
                         {notificationCount > 0 && (
                           <button 
                             onClick={handleMarkAllAsRead}
-                            className="text-xs text-gray-600 hover:text-gray-800"
+                            className="text-xs cursor-pointer text-gray-600 hover:text-gray-800"
                           >
                             Mark all as read
                           </button>

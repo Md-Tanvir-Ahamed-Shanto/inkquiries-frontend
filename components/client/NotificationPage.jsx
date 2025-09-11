@@ -215,9 +215,9 @@ const NotificationPage = () => {
           {notifications.length > 0 && (
             <button
               onClick={handleMarkAllAsRead}
-              className="px-4 py-2 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-zinc-200 inline-flex justify-center items-center gap-2 cursor-pointer hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 bg-white rounded-lg outline-1 outline-offset-[-1px] outline-zinc-200 inline-flex justify-center items-center gap-2 cursor-pointer hover:bg-gray-50 transition-colors"
             >
-              <div className="text-gray-800 text-sm font-medium leading-relaxed tracking-tight">Mark all as read</div>
+              <div className="text-gray-800 text-sm cursor-pointer font-medium leading-relaxed tracking-tight">Mark all as read</div>
             </button>
           )}
         </div>

@@ -179,7 +179,7 @@ function Notification() {
         {notifications.length > 0 && (
           <button
             onClick={handleMarkAllAsRead}
-            className="px-4 py-2 bg-white rounded-lg border border-gray-100 text-sm font-medium hover:bg-gray-50 transition-colors"
+            className="px-4 py-2 bg-white rounded-lg cursor-pointer border border-gray-100 text-sm font-medium hover:bg-gray-50 transition-colors"
           >
             Mark all as read
           </button>
