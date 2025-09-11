@@ -283,7 +283,7 @@ useEffect(() => {
   return (
     <div className="w-full h-full px-3 sm:px-6 pt-4 sm:pt-6 pb-4 bg-white rounded-lg flex flex-col gap-4 sm:gap-5 overflow-hidden">
       {/* Header */}
-      <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+      <div className="w-full flex flex-col px-20 sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
         <div className="text-black text-lg sm:text-xl font-semibold font-['Inter'] capitalize leading-normal">
           Artist Management
         </div>

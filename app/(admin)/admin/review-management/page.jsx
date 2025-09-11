@@ -129,7 +129,7 @@ const ReviewTable = () => {
   return (
     <div className="w-full h-full px-3 sm:px-6 pt-4 sm:pt-6 pb-4 bg-white rounded-lg flex flex-col gap-4 sm:gap-5 overflow-hidden">
       {/* Header with title, search and filter */}
-      <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+      <div className="w-full px-24 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
           <div className="text-black text-lg sm:text-xl font-semibold font-['Inter'] capitalize leading-normal">
             All Review
