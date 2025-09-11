@@ -240,7 +240,7 @@ const Header = () => {
                                     user?.role === 'artist' ? '/artist/dashboard?tab=notification' : 
                                     '/client/dashboard?tab=notification'}
                         >
-                          <div className="text-xs text-center text-gray-600 hover:text-gray-800">
+                          <div className="text-xs text-center cursor-pointer text-gray-600 hover:text-gray-800">
                             View all notifications
                           </div>
                         </Link>

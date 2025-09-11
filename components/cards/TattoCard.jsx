@@ -5,7 +5,7 @@ const TattoCard = ({tatto}) => {
     <div className="w-full relative rounded-lg overflow-hidden max-w-sm mx-auto">
       {" "}
       <img
-        className="w-96 h-[30rem] object-fill rounded-lg"
+        className="w-96 h-[30rem] object-contain rounded-lg"
         src={tatto.imageUrl}
         alt={tatto.title}
       />

@@ -76,9 +76,9 @@ const ShowTredingTattos = () => {
           <div className="text-black text-2xl md:text-3xl lg:text-5xl font-semibold font-['Inter'] capitalize">
             Trending tattoos
           </div>
-          <div className="text-black text-[16px] md:text-lg font-medium font-['Inter_Tight']  leading-tight cursor-pointer">
+          {/* <div className="text-black text-[16px] md:text-lg font-medium font-['Inter'] leading-tight cursor-pointer">
             View All
-          </div>
+          </div> */}
         </div>
         <div className="self-stretch flex flex-col justify-start items-center gap-6">
           {loading ? (

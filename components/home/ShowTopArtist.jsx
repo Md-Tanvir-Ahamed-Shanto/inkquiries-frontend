@@ -56,9 +56,9 @@ const ShowTopArtist = () => {
           <div className="text-black text-xl md:text-3xl lg:text-5xl font-semibold font-['Inter'] capitalize">
             top ranked artist
           </div>
-          <div className="text-black text-[16px] md:text-lg font-medium font-['Inter_Tight']  leading-tight cursor-pointer">
+          {/* <div className="text-black text-[16px] md:text-lg font-medium font-['Inter'] leading-tight cursor-pointer">
             View All
-          </div>
+          </div> */}
         </div>
 
         {loading ? (
