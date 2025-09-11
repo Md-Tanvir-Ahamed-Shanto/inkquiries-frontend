@@ -1,7 +1,7 @@
 "use client";
 import ReviewCard from "@/components/cards/ReviewCard";
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { getArtistProfile } from "@/service/artistApi";
 import { getArtistReviews } from "@/service/reviewApi";
 import { getArtistPortfolio } from "@/service/portfolioApi";
@@ -15,6 +15,9 @@ import ArtistAbout from "@/components/artist/ArtistAbout";
 
 const ArtistProfileDetails = () => {
   const { id } = useParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const tabParam = searchParams.get("tab");
 
   const [loading, setLoading] = useState(false);
   const [artistProfile, setArtistProfile] = useState({});
@@ -25,7 +28,7 @@ const ArtistProfileDetails = () => {
     reviewCount: 0,
     rating: 0,
   });
-  const [activeTab, setActiveTab] = useState('reviews');
+  const [activeTab, setActiveTab] = useState(tabParam || 'reviews');
   const [selectedPortfolioItem, setSelectedPortfolioItem] = useState(null);
   const [user, setUser] = useState(null);
 
@@ -198,6 +201,7 @@ const ArtistProfileDetails = () => {
             onClick={() => {
               setActiveTab('reviews');
               setSelectedPortfolioItem(null);
+              router.push(`/artist/profile/${id}?tab=reviews`);
             }}
             className={`text-sm md:text-xl font-semibold capitalize leading-[48px] transition-colors ${
               activeTab === 'reviews' 
@@ -211,6 +215,7 @@ const ArtistProfileDetails = () => {
             onClick={() => {
               setActiveTab('portfolio');
               setSelectedPortfolioItem(null);
+              router.push(`/artist/profile/${id}?tab=portfolio`);
             }}
             className={`text-sm md:text-xl font-semibold capitalize leading-[48px] transition-colors ${
               activeTab === 'portfolio' 
@@ -224,6 +229,7 @@ const ArtistProfileDetails = () => {
             onClick={() => {
               setActiveTab('about');
               setSelectedPortfolioItem(null);
+              router.push(`/artist/profile/${id}?tab=about`);
             }}
             className={`text-sm md:text-xl font-semibold capitalize leading-[48px] transition-colors ${
               activeTab === 'about' 

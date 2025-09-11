@@ -7,10 +7,17 @@ import CreateReviewPostPopup from "@/components/models/CreateReviewPostPopup";
 import { getClientProfile, getClientReviews } from "@/service/clientApi";
 import backendUrl from "@/utils/baseUrl";
 import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 const ClientDashboard = () => {
-  const [active, setActive] = useState("reviews");
+  // Get URL query parameters
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const tabParam = searchParams.get("tab");
+  
+  // Set active tab based on URL query parameter or default to "reviews"
+  const [active, setActive] = useState(tabParam || "reviews");
   const [isOpen, setIsOpen] = useState(false);
   const [profile, setProfile] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -109,7 +116,10 @@ const ClientDashboard = () => {
             } flex justify-center items-center gap-2.5`}
           >
             <div
-              onClick={() => setActive("reviews")}
+              onClick={() => {
+                setActive("reviews");
+                router.push("/client/dashboard?tab=reviews");
+              }}
               className="justify-start cursor-pointer text-zinc-950 text-base font-semibold capitalize leading-normal"
             >
               Reviews
@@ -121,7 +131,10 @@ const ClientDashboard = () => {
             } flex justify-center items-center gap-2.5`}
           >
             <div
-              onClick={() => setActive("notification")}
+              onClick={() => {
+                setActive("notification");
+                router.push("/client/dashboard?tab=notification");
+              }}
               className="justify-start cursor-pointer text-neutral-600 text-base font-normal capitalize leading-normal"
             >
               Notification
@@ -133,7 +146,10 @@ const ClientDashboard = () => {
             } flex justify-center items-center gap-2.5`}
           >
             <div
-              onClick={() => setActive("settings")}
+              onClick={() => {
+                setActive("settings");
+                router.push("/client/dashboard?tab=settings");
+              }}
               className="justify-start cursor-pointer text-neutral-600 text-base font-normal capitalize leading-normal"
             >
               Settings
