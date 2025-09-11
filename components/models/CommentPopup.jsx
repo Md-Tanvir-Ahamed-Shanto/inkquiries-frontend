@@ -51,12 +51,13 @@ const CommentPopup = ({ comments, onClose, onAddComment }) => {
                     </div>
                   )}
                 </div>
-                <div className="flex-1" suppressHydrationWarning>
+                <div className={`flex-1 ${comment.isOptimistic ? 'opacity-70' : ''}`} suppressHydrationWarning>
                   <div className="flex items-center gap-2 mb-1" suppressHydrationWarning>
                     <span className="font-medium text-sm text-gray-900" suppressHydrationWarning>
-                      {comment.author === user.name || user.username ? "Your": comment.author }
+                      {comment.author === user?.name || comment.author === user?.username ? "Your": comment.author }
                     </span>
                     <span className="text-xs text-gray-500" suppressHydrationWarning>{formatTimeAgo(comment.timestamp)}</span>
+                    
                   </div>
                   <p className="text-sm text-gray-700" suppressHydrationWarning>{comment.text}</p>
                 </div>

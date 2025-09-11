@@ -68,6 +68,7 @@ const useEngagement = (review, reviewId, initialLikeStatus = null) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fetchingLikeStatus, setFetchingLikeStatus] = useState(false);
+  const [optimisticUpdate, setOptimisticUpdate] = useState(false); // Track optimistic updates
   
   // Cache to prevent duplicate API calls for the same reviewId
   const likeStatusCache = useRef(new Map());
@@ -117,24 +118,51 @@ const useEngagement = (review, reviewId, initialLikeStatus = null) => {
   const toggleLike = async () => {
     setLoading(true);
     setError(null); // Clear previous errors
+    
+    // Store original state to revert if API call fails
+    const originalLikeState = isLiked;
+    const originalLikesCount = likes;
+    
+    // Set optimistic update flag
+    setOptimisticUpdate(true);
+    
+    // Optimistically update UI immediately
+    if (isLiked) {
+      setLikes(prev => prev - 1);
+      setIsLiked(false);
+      likeStatusCache.current.set(reviewId, false);
+    } else {
+      setLikes(prev => prev + 1);
+      setIsLiked(true);
+      likeStatusCache.current.set(reviewId, true);
+    }
+    
+    // Set loading to false immediately after UI update
+    setLoading(false);
+    
     try {
-      if (isLiked) {
+      // Make API call in background
+      if (originalLikeState) {
         const response = await unLikeReview(reviewId);
-        setLikes(response.likesCount);
-        setIsLiked(false); // Set to false after unliking
-        // Update cache
-        likeStatusCache.current.set(reviewId, false);
+        // Optional: sync with actual server count if needed
+        // setLikes(response.likesCount);
       } else {
         const response = await likeReview(reviewId);
-        setLikes(response.likesCount);
-        setIsLiked(true); // Set to true after liking
-        // Update cache
-        likeStatusCache.current.set(reviewId, true);
+        // Optional: sync with actual server count if needed
+        // setLikes(response.likesCount);
       }
+      // Clear optimistic update flag after successful API call
+      setOptimisticUpdate(false);
     } catch (err) {
+      // Revert UI changes on error
       setError(err.message || 'Failed to update like status');
-    } finally {
-      setLoading(false);
+      setIsLiked(originalLikeState);
+      setLikes(originalLikesCount);
+      likeStatusCache.current.set(reviewId, originalLikeState);
+      setOptimisticUpdate(false);
+      
+      // Auto-clear error after 3 seconds
+      setTimeout(() => setError(null), 3000);
     }
   };
 
@@ -149,6 +177,7 @@ const useEngagement = (review, reviewId, initialLikeStatus = null) => {
     isLiked,
     loading,
     error,
+    optimisticUpdate,
     toggleLike,
     clearError,
     incrementComments,
@@ -195,23 +224,59 @@ const useComments = (reviewId) => {
     if (commentText.trim()) {
       setLoading(true);
       setError(null); // Clear previous errors
+      
+      // Store the comment text before clearing it
+      const commentToAdd = commentText;
+      
+      // Get current user info for optimistic update
+      const user = getCurrentUser();
+      
+      // Create temporary ID for optimistic comment
+      const tempId = `temp-${Date.now()}`;
+      
+      // Create optimistic comment object
+      const optimisticComment = {
+        id: tempId,
+        text: commentToAdd,
+        author: user?.name || user?.username || "You",
+        timestamp: new Date().toISOString(),
+        authorImage: user?.profilePhoto,
+        isOptimistic: true // Flag to identify optimistic comments
+      };
+      
+      // Add optimistic comment to the list immediately
+      setCommentsList(prev => [...prev, optimisticComment]);
+      
+      // Clear the input field immediately
+      setCommentText("");
+      
+      // Set loading to false after UI update
+      setLoading(false);
+      
       try {
-        const response = await addReviewComment(reviewId, commentText);
-        const newComment = {
-          id: response.id,
-          text: response.content,
-          author: response.client?.name || response.client?.username || "You",
-          timestamp: response.createdAt,
-          authorImage: response.client?.profilePhoto || comment?.artist?.profilePhoto
-        };
-        setCommentsList(prev => [...prev, newComment]);
-        setCommentText("");
+        // Make API call in background
+        const response = await addReviewComment(reviewId, commentToAdd);
+        
+        // Replace optimistic comment with real one from server
+        setCommentsList(prev => prev.map(comment => 
+          comment.id === tempId ? {
+            id: response.id,
+            text: response.content,
+            author: response.client?.name || response.client?.username || response.artist?.name || response.artist?.username || "You",
+            timestamp: response.createdAt,
+            authorImage: response.client?.profilePhoto || response.artist?.profilePhoto
+          } : comment
+        ));
+        
         return true;
       } catch (err) {
+        // Remove the optimistic comment on error
+        setCommentsList(prev => prev.filter(comment => comment.id !== tempId));
         setError(err.message || 'Failed to add comment');
+        
+        // Auto-clear error after 3 seconds
+        setTimeout(() => setError(null), 3000);
         return false;
-      } finally {
-        setLoading(false);
       }
     }
     return false;
@@ -276,7 +341,7 @@ const EngagementButtons = ({ engagement, onLike, onComment, onShare }) => {
               src={heartIcon}
               className={`w-5 h-5 transition-all duration-200 ${
                 engagement.isLiked ? 'scale-110' : ''
-              }`}
+              } ${engagement.optimisticUpdate ? '' : ''}`}
               height={20}
               width={20}
               alt="Heart Icon"
@@ -289,7 +354,7 @@ const EngagementButtons = ({ engagement, onLike, onComment, onShare }) => {
             />
           )}
         </div>
-        <span className="text-sm font-medium" suppressHydrationWarning>
+        <span className={`text-sm font-medium ${engagement.optimisticUpdate ? 'animate-pulse' : ''}`} suppressHydrationWarning>
           {engagement.likes}
         </span>
       </button>
