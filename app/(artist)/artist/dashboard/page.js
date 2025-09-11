@@ -3,6 +3,7 @@ import Image from "next/image";
 import { GoDotFill } from "react-icons/go";
 import React, { useState, useEffect } from "react";
 import { FiEdit3 } from "react-icons/fi";
+import { useSearchParams, useRouter } from "next/navigation";
 import Reviews from "@/components/artist/Reviews";
 import About from "@/components/artist/About";
 import Portfolio from "@/components/artist/Portfolio";
@@ -22,7 +23,18 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [portfolioModal, setPortfolioModal] = useState(false);
-  const [activeTab, setActiveTab] = useState("Reviews");
+  
+  // Get URL query parameters
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const tabParam = searchParams.get("tab");
+  
+  // Set active tab based on URL query parameter or default to "Reviews"
+  const [activeTab, setActiveTab] = useState(
+    tabParam ? 
+      tabParam.charAt(0).toUpperCase() + tabParam.slice(1).toLowerCase() : 
+      "Reviews"
+  );
 
   // Get user from localStorage after component mounts (client-side only)
   useEffect(() => {
@@ -195,7 +207,13 @@ console.log("profile data",profile)
             tab.visible && (
               <div
                 key={tab.name}
-                onClick={() => setActiveTab(tab.name)}
+                onClick={() => {
+                  setActiveTab(tab.name);
+                  // Update URL with the selected tab
+                  const params = new URLSearchParams(searchParams);
+                  params.set("tab", tab.name.toLowerCase());
+                  router.push(`?${params.toString()}`);
+                }}
                 className={`flex-shrink-0 h-[42px] flex items-center cursor-pointer ${
                   activeTab === tab.name
                     ? "border-b-2 border-black text-black font-medium"
