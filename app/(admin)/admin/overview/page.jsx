@@ -108,7 +108,9 @@ const Page = () => {
   return (
     <div className="">
       {loading ? (
-        <div className="flex justify-center items-center h-40">Loading dashboard data...</div>
+        <div className="flex justify-center items-center h-40">
+         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div>
+        </div>
       ) : error ? (
         <div className="text-red-500 text-center p-4">{error}</div>
       ) : (

@@ -49,7 +49,7 @@ export default function GeneralSettingsPage() {
   }, []);
 
   if (loading) {
-    return <div className="p-8 text-center">Loading profile...</div>;
+    return <div className="p-8 text-center">  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div></div>;
   }
 
   return (

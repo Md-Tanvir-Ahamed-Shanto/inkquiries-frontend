@@ -104,7 +104,7 @@ export default function ReviewPage() {
     return (
       <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-0 max-w-7xl mx-auto">
         <div className="w-full flex justify-center py-6 sm:py-8 lg:py-10">
-          <div className="text-center">Loading review details...</div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div>
         </div>
       </div>
     );

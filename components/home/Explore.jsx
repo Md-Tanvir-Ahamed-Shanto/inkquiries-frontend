@@ -148,7 +148,7 @@ const Explore = () => {
             <p className="text-red-500 mb-4">{error}</p>
             <button 
               onClick={() => fetchReviews(1, false)}
-              className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+              className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors cursor-pointer"
             >
               Try Again
             </button>

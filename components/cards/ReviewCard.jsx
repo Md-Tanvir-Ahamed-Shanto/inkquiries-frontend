@@ -385,7 +385,7 @@ const EngagementButtons = ({ engagement, onLike, onComment, onShare }) => {
 
       <button
         onClick={onShare}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-green-600 transition-colors"
+        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-green-600 transition-colors cursor-pointer"
         suppressHydrationWarning
       >
         <Image
@@ -486,7 +486,7 @@ const ReviewCard = ({ item, reviewId = item?.id, initialLikeStatus }) => {
 
   return (
     <>
-      <div className="bg-white rounded-2xl border border-gray-200 p-4 space-y-4 hover:shadow-md transition-shadow duration-200 max-w-xl mx-auto" suppressHydrationWarning>
+      <div className="bg-white rounded-2xl border border-gray-200 p-4 space-y-4 hover:shadow-md transition-shadow duration-200 max-w-xl mx-auto cursor-pointer" suppressHydrationWarning>
         <Link href={`/review/${reviewId}`}>
        
         <div className="flex justify-between items-start" suppressHydrationWarning>
@@ -496,7 +496,7 @@ const ReviewCard = ({ item, reviewId = item?.id, initialLikeStatus }) => {
           {user?.id === item.artistId && (
             <button 
               onClick={handleReport}
-              className="text-sm text-gray-500 hover:cursor-pointer hover:text-red-500 flex items-center gap-1 transition-colors"
+              className="text-sm text-gray-500 cursor-pointer hover:text-red-500 flex items-center gap-1 transition-colors"
               title="Report this review"
               suppressHydrationWarning
             >

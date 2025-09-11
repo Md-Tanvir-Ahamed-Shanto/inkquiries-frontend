@@ -110,7 +110,7 @@ console.log("profile data",profile)
   if (loading) {
     return (
       <div className="flex p-4 flex-col items-center min-h-screen justify-center">
-        <div className="text-xl">Loading profile...</div>
+         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div>
       </div>
     );
   }

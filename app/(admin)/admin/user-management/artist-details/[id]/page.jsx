@@ -98,7 +98,7 @@ function Page() {
   }));
 
   if (loading) {
-    return <div className="flex justify-center items-center h-64">Loading artist data...</div>;
+    return <div className="flex justify-center items-center h-64">  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div></div>;
   }
   
   if (error) {

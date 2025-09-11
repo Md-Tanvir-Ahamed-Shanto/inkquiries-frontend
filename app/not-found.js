@@ -9,7 +9,7 @@ export default function NotFound() {
         Oops! The page you are looking for does not exist. It might have been moved or deleted.
       </p>
       <Link href="/">
-        <button className="px-6 py-3 bg-gray-600 text-white rounded-lg shadow-md hover:bg-gray-700 transition duration-300 ease-in-out text-lg">
+        <button className="px-6 py-3 bg-gray-600 text-white rounded-lg shadow-md hover:bg-gray-700 transition duration-300 ease-in-out text-lg cursor-pointer">
           Go back to Home
         </button>
       </Link>

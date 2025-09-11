@@ -64,7 +64,7 @@ const ClientDashboard = () => {
   if (loading) {
     return (
       <div className="w-full flex justify-center items-center p-4 md:px-28">
-        Loading...
+       <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div>
       </div>
     );
   }

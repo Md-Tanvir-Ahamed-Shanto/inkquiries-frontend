@@ -264,7 +264,7 @@ export default function ClientTable() {
               <tr className="w-full flex border-t border-zinc-200">
                 <td colSpan="6" className="w-full h-16 px-3 py-6 bg-white flex justify-center items-center">
                   <div className="text-neutral-600 text-sm font-normal leading-none">
-                    Loading clients...
+                     <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div>
                   </div>
                 </td>
               </tr>
@@ -421,7 +421,7 @@ export default function ClientTable() {
             <div className="w-full flex border-t border-zinc-200">
               <div className="w-full h-12 px-2 py-3 bg-white flex justify-center items-center">
                 <div className="text-neutral-600 text-xs font-normal leading-none">
-                  Loading clients...
+                 <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div>
                 </div>
               </div>
             </div>

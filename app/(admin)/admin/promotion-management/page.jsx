@@ -243,7 +243,7 @@ const PromotionTable = () => {
               {loading ? (
                 <tr className="w-full flex border-t border-zinc-200">
                   <td colSpan="6" className="w-full h-16 px-3 py-6 bg-white flex items-center justify-center">
-                    <div className="text-neutral-600 text-sm font-normal">Loading promotions...</div>
+                    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div>
                   </td>
                 </tr>
               ) : error ? (
@@ -374,7 +374,7 @@ const PromotionTable = () => {
             {loading ? (
               <div className="w-full flex border-t border-zinc-200">
                 <div className="w-full h-12 px-2 py-3 bg-white flex items-center justify-center">
-                  <div className="text-neutral-600 text-xs font-normal">Loading promotions...</div>
+                  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div>
                 </div>
               </div>
             ) : error ? (

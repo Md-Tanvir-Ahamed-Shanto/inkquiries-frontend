@@ -86,7 +86,7 @@ function Page() {
   if (loading) {
     return (
       <div className="w-full max-w-[1132px] px-4 sm:px-6 py-6 sm:py-8 bg-white rounded-lg flex justify-center items-center shadow-sm">
-        <div className="animate-pulse">Loading client details...</div>
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div>
       </div>
     );
   }

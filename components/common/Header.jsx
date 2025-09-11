@@ -215,7 +215,7 @@ const Header = () => {
                     
                     <div className="max-h-80 overflow-y-auto">
                       {loading ? (
-                        <div className="px-4 py-3 text-sm text-gray-500 text-center">Loading...</div>
+                        <div className="px-4 py-3 text-sm text-gray-500 text-center">  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div></div>
                       ) : notifications.length > 0 ? (
                         notifications.map((notification) => (
                           <div 
@@ -315,7 +315,7 @@ const Header = () => {
 
       {/* Mobile Hamburger Menu Icon */}
       <div className="lg:hidden flex items-center" suppressHydrationWarning>
-        <button onClick={toggleMobileMenu} className="focus:outline-none" suppressHydrationWarning>
+        <button onClick={toggleMobileMenu} className="focus:outline-none cursor-pointer" suppressHydrationWarning>
 
           <svg
             className="w-8 h-8 text-black"
@@ -347,7 +347,7 @@ const Header = () => {
       {isMobileMenuOpen && (
         <div className="lg:hidden absolute top-0 left-0 w-full h-screen bg-white z-50 flex flex-col items-center justify-center space-y-8 animate-fade-in-down" suppressHydrationWarning>
       
-          <button onClick={toggleMobileMenu} className="absolute top-6 right-6 focus:outline-none" suppressHydrationWarning>
+          <button onClick={toggleMobileMenu} className="absolute top-6 right-6 focus:outline-none cursor-pointer" suppressHydrationWarning>
             <svg
               className="w-8 h-8 text-black"
               fill="none"

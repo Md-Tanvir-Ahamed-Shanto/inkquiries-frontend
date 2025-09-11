@@ -131,7 +131,7 @@ const ReportTable = () => {
         <button
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`w-8 h-8 rounded-lg border text-xs font-medium transition-colors ${
+          className={`w-8 h-8 rounded-lg border text-xs font-medium transition-colors cursor-pointer ${
             currentPage === i
               ? 'bg-gray-50 text-gray-600 border-gray-200'
               : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
@@ -170,7 +170,7 @@ const ReportTable = () => {
             <div className="relative" ref={filterRef}>
               <button
                 onClick={() => setShowFilter((prev) => !prev)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all cursor-pointer"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z" />
@@ -187,7 +187,7 @@ const ReportTable = () => {
                     <button
                       key={idx}
                       onClick={() => handleFilterSelect(option)}
-                      className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                      className={`w-full text-left px-4 py-2 text-sm transition-colors cursor-pointer ${
                         selectedFilter === option
                           ? "bg-gray-50 text-gray-700 font-medium"
                           : "text-gray-700 hover:bg-gray-50"
@@ -376,7 +376,7 @@ const ReportTable = () => {
                     
                     <div className="pt-2">
                       <Link href={`/admin/report-n-support/report/report-details?id=${report.id}`}>
-                        <button className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-lg transition-colors">
+                        <button className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-lg transition-colors cursor-pointer">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -418,7 +418,7 @@ const ReportTable = () => {
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="p-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="p-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
@@ -432,7 +432,7 @@ const ReportTable = () => {
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="p-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="p-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />

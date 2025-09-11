@@ -62,7 +62,7 @@ function ArtistAbout({artistId}) {
 
 
   if (loading) {
-    return <div className="w-full text-center py-8">Loading...</div>;
+    return <div className="w-full text-center py-8">  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div></div>;
   }
 
   if (error) {

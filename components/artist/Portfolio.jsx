@@ -57,7 +57,7 @@ function Portfolio() {
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 mt-4 sm:mt-6 md:mt-12 flex justify-center items-center min-h-[200px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-2"></div>
-          <p className="text-sm sm:text-base text-gray-600">Loading...</p>
+          <p className="text-sm sm:text-base text-gray-600">  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div></p>
         </div>
       </div>
     );

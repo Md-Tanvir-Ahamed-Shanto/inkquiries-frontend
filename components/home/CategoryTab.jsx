@@ -108,7 +108,7 @@ const CategoryTab = () => {
           <div className="bg-gradient-to-r from-white via-white to-transparent w-12 h-full flex items-center pl-4">
             <button
               onClick={scrollLeft}
-              className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 transition-colors bg-white shadow-sm"
+              className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 transition-colors bg-white shadow-sm cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4 text-gray-600" />
             </button>
@@ -152,7 +152,7 @@ const CategoryTab = () => {
           <div className="bg-gradient-to-l from-white via-white to-transparent w-12 h-full flex items-center justify-end pr-4">
             <button
               onClick={scrollRight}
-              className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 transition-colors bg-white shadow-sm"
+              className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 transition-colors bg-white shadow-sm cursor-pointer"
             >
               <ChevronRight className="w-4 h-4 text-gray-600" />
             </button>
