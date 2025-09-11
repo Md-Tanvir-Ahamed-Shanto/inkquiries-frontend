@@ -111,9 +111,23 @@ export default function ArtistTable() {
 
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [selectedOriginal, setSelectedOriginal] = useState("Original");
+  const [status, setStatus] = useState(""); // Add status state for active/inactive filtering
 
   const handleFilterSelect = (value) => {
     setSelectedFilter(value);
+    
+    // Handle status filtering
+    if (value === "Status: Active") {
+      setStatus("Active");
+    } else if (value === "Status: Inactive") {
+      setStatus("Inactive");
+    } else if (value === "Status: All") {
+      setStatus("");
+    } else {
+      // For other filter types (Name, Join Date)
+      setStatus(""); // Reset status filter when using other filters
+    }
+    
     setShowFilter(false); // close dropdown
   };
 
@@ -229,6 +243,25 @@ useEffect(() => {
   }
 }, [selectedFilter, artists]);
 
+// Apply status filter
+useEffect(() => {
+  if (status) {
+    const filtered = artists.filter(artist => {
+      if (status === "Active") {
+        return artist.isActive === true;
+      } else if (status === "Inactive") {
+        return artist.isActive === false;
+      }
+      return true;
+    });
+    setFilteredArtists(filtered);
+    setPagination(prev => ({ ...prev, page: 1 })); // Reset to first page on filter change
+  } else if (searchTerm === "") {
+    // Only reset to all artists if there's no search term active
+    setFilteredArtists(artists);
+  }
+}, [status, artists]);
+
 // Fetch artists data only once on component mount
 useEffect(() => {
   fetchArtists();
@@ -275,47 +308,7 @@ useEffect(() => {
               </button>
             )}
           </div>
-          {/* Original Dropdown */}
-          <div className="relative inline-block w-full sm:w-auto" ref={originalRef}>
-            <div
-              onClick={() => setShowOriginal((prev) => !prev)}
-              className="w-full sm:min-w-[140px] h-8 sm:h-10 px-3 sm:px-4 bg-white rounded-md border border-zinc-200 flex justify-between sm:justify-center items-center gap-2.5 cursor-pointer"
-            >
-              <div className="text-neutral-600 text-sm sm:text-base font-normal capitalize leading-tight truncate">
-                {selectedOriginal}
-              </div>
-              <img
-                src="/icon/right-arrow.svg"
-                className={`w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-200 flex-shrink-0 ${
-                  showOriginal ? "rotate-90" : "-rotate-90"
-                }`}
-                alt="arrow"
-              />
-            </div>
-
-            {showOriginal && (
-              <div className="absolute left-0 sm:right-0 mt-2 w-full sm:w-48 p-3 bg-white rounded-md shadow-lg border border-zinc-200 z-10">
-                <div className="flex flex-col gap-2.5">
-                  <div
-                    onClick={() => handleSelect("Original")}
-                    className="w-full py-2 border-b border-zinc-200 hover:bg-gray-100 px-2 rounded cursor-pointer"
-                  >
-                    <div className="text-neutral-600 text-sm sm:text-base font-normal capitalize leading-tight">
-                      Original
-                    </div>
-                  </div>
-                  <div
-                    onClick={() => handleSelect("Created by Client")}
-                    className="w-full py-2 hover:bg-gray-100 px-2 rounded cursor-pointer"
-                  >
-                    <div className="text-neutral-600 text-sm sm:text-base font-normal capitalize leading-tight">
-                      Created by Client
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+        
 
           {/* Filter Dropdown */}
           <div className="relative w-full sm:w-auto" ref={filterRef}>
@@ -336,26 +329,65 @@ useEffect(() => {
             {showFilter && (
               <div className="absolute left-0 sm:right-0 mt-2 w-full sm:w-48 p-3 bg-white rounded-md shadow-lg border border-zinc-200 z-10">
                 <div className="flex flex-col gap-2.5">
-                  {["Name (A-Z)", "Status", "Join Date Range"].map(
-                    (option, idx) => (
-                      <div
-                        key={idx}
-                        onClick={() => handleFilterSelect(option)}
-                        className={`w-full py-2 px-2 flex items-center gap-2 rounded cursor-pointer hover:bg-gray-100 ${
-                          selectedFilter === option ? "bg-gray-100" : ""
-                        }`}
-                      >
-                        <div className="w-4 h-4 border border-gray-400 rounded relative flex-shrink-0">
-                          {selectedFilter === option && (
-                            <div className="absolute inset-[1.3px] bg-slate-900 rounded" />
-                          )}
-                        </div>
-                        <div className="text-neutral-600 text-sm sm:text-base font-normal capitalize leading-tight">
-                          {option}
-                        </div>
-                      </div>
-                    )
-                  )}
+                  {/* Status filters */}
+                  <div className="w-full py-2 border-b border-zinc-200">
+                    <div className="text-neutral-600 text-sm font-medium mb-2">Status</div>
+                    <div className="flex flex-col gap-2">
+                      {["Status: All", "Status: Active", "Status: Inactive"].map(
+                        (option, idx) => (
+                          <div
+                            key={idx}
+                            onClick={() => handleFilterSelect(option)}
+                            className={`w-full py-1 px-2 flex items-center gap-2 rounded cursor-pointer hover:bg-gray-100 ${
+                              (option === "Status: All" && status === "") ||
+                              (option === "Status: Active" && status === "Active") ||
+                              (option === "Status: Inactive" && status === "Inactive")
+                                ? "bg-gray-100"
+                                : ""
+                            }`}
+                          >
+                            <div className="w-4 h-4 border border-gray-400 rounded relative flex-shrink-0">
+                              {((option === "Status: All" && status === "") ||
+                                (option === "Status: Active" && status === "Active") ||
+                                (option === "Status: Inactive" && status === "Inactive")) && (
+                                <div className="absolute inset-[1.3px] bg-slate-900 rounded" />
+                              )}
+                            </div>
+                            <div className="text-neutral-600 text-sm font-normal leading-tight">
+                              {option.replace("Status: ", "")}
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Sort options */}
+                  <div className="w-full py-2">
+                    <div className="text-neutral-600 text-sm font-medium mb-2">Sort By</div>
+                    <div className="flex flex-col gap-2">
+                      {["Name (A-Z)", "Status", "Join Date Range"].map(
+                        (option, idx) => (
+                          <div
+                            key={idx}
+                            onClick={() => handleFilterSelect(option)}
+                            className={`w-full py-1 px-2 flex items-center gap-2 rounded cursor-pointer hover:bg-gray-100 ${
+                              selectedFilter === option ? "bg-gray-100" : ""
+                            }`}
+                          >
+                            <div className="w-4 h-4 border border-gray-400 rounded relative flex-shrink-0">
+                              {selectedFilter === option && (
+                                <div className="absolute inset-[1.3px] bg-slate-900 rounded" />
+                              )}
+                            </div>
+                            <div className="text-neutral-600 text-sm font-normal leading-tight">
+                              {option}
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             )}

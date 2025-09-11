@@ -98,6 +98,8 @@ export default function ClientTable() {
   const filterRef = useRef(null);
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [clients, setClients] = useState([]);
+  const [filteredClients, setFilteredClients] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({
     total: 0,
@@ -106,44 +108,85 @@ export default function ClientTable() {
     pages: 0
   });
   const [status, setStatus] = useState("");
+  const [isFiltering, setIsFiltering] = useState(false);
   
    const fetchClients = async () => {
       try {
         setLoading(true);
+        // Fetch all clients at once
         const params = {
-          page: pagination.page,
-          limit: pagination.limit
+          limit: 1000 // Get all clients in one request
         };
-        
-        if (status) {
-          params.status = status;
-        }
         
         const response = await getAllClients(params);
         setClients(response.clients);
-        setPagination(response.pagination);
+        // Initialize filtered clients with all clients
+        setFilteredClients(response.clients);
+        // Set total for pagination
+        setPagination(prev => ({
+          ...prev,
+          total: response.pagination.total,
+          pages: Math.ceil(response.pagination.total / prev.limit)
+        }));
       } catch (error) {
         console.error("Error fetching clients:", error);
         // Use placeholder data if API fails
         setClients(placeholderClients);
+        setFilteredClients(placeholderClients);
       } finally {
         setLoading(false);
       }
     };
-  // Fetch clients data
-  useEffect(() => {
-   
     
+  // Fetch clients data on component mount
+  useEffect(() => {
     fetchClients();
-  }, [pagination.page, pagination.limit, status]);
+  }, []);
+  
+  // Filter clients based on search term
+  useEffect(() => {
+    setIsFiltering(true);
+    const filtered = clients.filter(client => {
+      const matchesSearch = searchTerm === "" || 
+        client.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        client.email?.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      return matchesSearch;
+    });
+    
+    setFilteredClients(filtered);
+    setPagination(prev => ({ ...prev, page: 1 })); // Reset to first page on filter change
+    setIsFiltering(false);
+  }, [searchTerm, clients]);
+  
+  // Filter clients based on status
+  useEffect(() => {
+    setIsFiltering(true);
+    const filtered = clients.filter(client => {
+      const matchesSearch = searchTerm === "" || 
+        client.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        client.email?.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesStatus = status === "" || 
+        (status === "Active" && client.isActive === true) ||
+        (status === "Inactive" && client.isActive === false);
+      
+      return matchesSearch && matchesStatus;
+    });
+    
+    setFilteredClients(filtered);
+    setPagination(prev => ({ ...prev, page: 1 })); // Reset to first page on filter change
+    setIsFiltering(false);
+  }, [status, searchTerm, clients]);
   
   const handleFilterSelect = (value) => {
     setSelectedFilter(value);
+    setIsFiltering(true);
     if (value === "Status: Active") {
       setStatus("Active");
     } else if (value === "Status: Inactive") {
       setStatus("Inactive");
-    } else {
+    } else if (value === "Status: All") {
       setStatus("");
     }
     setShowFilter(false); // close dropdown
@@ -174,8 +217,27 @@ export default function ClientTable() {
         <div className="text-black text-lg sm:text-xl font-semibold font-['Inter'] capitalize leading-normal">
           Client Management
         </div>
-        {/* Filter Dropdown */}
-        <div className="relative w-full sm:w-auto" ref={filterRef}>
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+          {/* Search Input */}
+          <div className="relative w-full sm:w-64">
+            <input
+              type="text"
+              placeholder="Search clients..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full h-8 sm:h-10 px-3 sm:px-4 py-2 bg-white rounded-md border border-zinc-200 text-sm"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                ×
+              </button>
+            )}
+          </div>
+          {/* Filter Dropdown */}
+          <div className="relative w-full sm:w-auto" ref={filterRef}>
           <div
             onClick={() => setShowFilter((prev) => !prev)}
             className="w-full sm:min-w-fit h-8 sm:h-10 px-3 sm:px-4 bg-white rounded-md border border-zinc-200 flex justify-between sm:justify-center items-center gap-2.5 cursor-pointer"
@@ -193,7 +255,7 @@ export default function ClientTable() {
           {showFilter && (
             <div className="absolute left-0 sm:right-0 mt-2 w-full sm:w-48 p-3 bg-white rounded-md shadow-lg border border-zinc-200 z-10">
               <div className="flex flex-col gap-2.5">
-                {["Name (A-Z)", "Status", "Join Date Range"].map(
+                {["Status: All", "Status: Active", "Status: Inactive"].map(
                   (option, idx) => (
                     <div
                       key={idx}
@@ -256,7 +318,7 @@ export default function ClientTable() {
 
           {/* Table Body */}
           <tbody>
-            {loading ? (
+            {loading || isFiltering ? (
               <tr className="w-full flex border-t border-zinc-200">
                 <td colSpan="6" className="w-full h-16 px-3 py-6 bg-white flex justify-center items-center">
                   <div className="text-neutral-600 text-sm font-normal leading-none">
@@ -264,7 +326,7 @@ export default function ClientTable() {
                   </div>
                 </td>
               </tr>
-            ) : clients.length === 0 ? (
+            ) : filteredClients.length === 0 ? (
               <tr className="w-full flex border-t border-zinc-200">
                 <td colSpan="6" className="w-full h-16 px-3 py-6 bg-white flex justify-center items-center">
                   <div className="text-neutral-600 text-sm font-normal leading-none">
@@ -272,7 +334,7 @@ export default function ClientTable() {
                   </div>
                 </td>
               </tr>
-            ) : clients.map((client) => (
+            ) : filteredClients.slice((pagination.page - 1) * pagination.limit, pagination.page * pagination.limit).map((client) => (
               <tr
                 key={client.id}
                 className="w-full flex border-t border-zinc-200"
@@ -405,7 +467,7 @@ export default function ClientTable() {
           </div>
 
           {/* Table Rows */}
-          {loading ? (
+          {loading || isFiltering ? (
             <div className="w-full flex border-t border-zinc-200">
               <div className="w-full h-12 px-2 py-3 bg-white flex justify-center items-center">
                 <div className="text-neutral-600 text-xs font-normal leading-none">
@@ -413,7 +475,7 @@ export default function ClientTable() {
                 </div>
               </div>
             </div>
-          ) : clients.length === 0 ? (
+          ) : filteredClients.length === 0 ? (
             <div className="w-full flex border-t border-zinc-200">
               <div className="w-full h-12 px-2 py-3 bg-white flex justify-center items-center">
                 <div className="text-neutral-600 text-xs font-normal leading-none">
@@ -421,7 +483,7 @@ export default function ClientTable() {
                 </div>
               </div>
             </div>
-          ) : clients.map((client) => (
+          ) : filteredClients.slice((pagination.page - 1) * pagination.limit, pagination.page * pagination.limit).map((client) => (
             <div
               key={client.id}
               className="w-full flex border-t border-zinc-200"
@@ -500,7 +562,7 @@ export default function ClientTable() {
             
             {/* Page Numbers */}
             <div className="flex items-center">
-              {Array.from({ length: Math.min(pagination.pages, 3) }, (_, i) => {
+              {filteredClients.length > 0 && Array.from({ length: Math.min(Math.ceil(filteredClients.length / pagination.limit), 3) }, (_, i) => {
                 const pageNum = i + 1;
                 return (
                   <button 
@@ -516,7 +578,7 @@ export default function ClientTable() {
               })}
               
               {/* Ellipsis for many pages */}
-              {pagination.pages > 3 && (
+              {Math.ceil(filteredClients.length / pagination.limit) > 3 && (
                 <button className="hidden sm:block w-8 h-8 px-3 py-[5px]">
                   <div className="text-neutral-900 text-xs font-medium">
                     ...
@@ -525,13 +587,13 @@ export default function ClientTable() {
               )}
               
               {/* Last page button */}
-              {pagination.pages > 3 && (
+              {Math.ceil(filteredClients.length / pagination.limit) > 3 && (
                 <button 
-                  onClick={() => handlePageChange(pagination.pages)}
-                  className={`hidden sm:block w-8 h-8 px-2.5 py-[5px] ${pagination.page === pagination.pages ? 'bg-stone-50 rounded-[10px] border border-gray-100' : ''}`}
+                  onClick={() => handlePageChange(Math.ceil(filteredClients.length / pagination.limit))}
+                  className={`hidden sm:block w-8 h-8 px-2.5 py-[5px] ${pagination.page === Math.ceil(filteredClients.length / pagination.limit) ? 'bg-stone-50 rounded-[10px] border border-gray-100' : ''}`}
                 >
                   <div className="text-neutral-900 text-xs font-medium">
-                    {pagination.pages}
+                    {Math.ceil(filteredClients.length / pagination.limit)}
                   </div>
                 </button>
               )}
@@ -539,9 +601,9 @@ export default function ClientTable() {
             
             {/* Next Page Button */}
             <button 
-              onClick={() => pagination.page < pagination.pages && handlePageChange(pagination.page + 1)}
-              className={`w-8 h-8 rounded-lg border border-gray-100 flex justify-center items-center ${pagination.page >= pagination.pages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-              disabled={pagination.page >= pagination.pages}
+              onClick={() => pagination.page < Math.ceil(filteredClients.length / pagination.limit) && handlePageChange(pagination.page + 1)}
+              className={`w-8 h-8 rounded-lg border border-gray-100 flex justify-center items-center ${pagination.page >= Math.ceil(filteredClients.length / pagination.limit) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              disabled={pagination.page >= Math.ceil(filteredClients.length / pagination.limit)}
             >
               <img src="/icon/right.svg" className="w-3 sm:w-4 h-3 sm:h-4 relative" />
             </button>
@@ -550,7 +612,11 @@ export default function ClientTable() {
           {/* Entries info and limit selector */}
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
             <div className="text-zinc-700 text-xs font-medium text-center sm:text-left">
-              Showing {((pagination.page - 1) * pagination.limit) + 1} to {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total} entries
+              {filteredClients.length > 0 ? (
+                `Showing ${((pagination.page - 1) * pagination.limit) + 1} to ${Math.min(pagination.page * pagination.limit, filteredClients.length)} of ${filteredClients.length} entries`
+              ) : (
+                "No entries to show"
+              )}
             </div>
             
             {/* Show entries dropdown */}
@@ -588,6 +654,7 @@ export default function ClientTable() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
