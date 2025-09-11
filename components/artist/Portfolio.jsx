@@ -28,7 +28,7 @@ function Portfolio() {
         setLoading(false);
       }
     };
-    
+
   useEffect(() => {
    
 
@@ -103,7 +103,7 @@ function Portfolio() {
                 <div 
                   key={item.id} 
                   onClick={() => handleCardClick(index)}
-                  className="cursor-pointer transition-all duration-200 hover:shadow-lg flex flex-col h-full"
+                  className="cursor-pointer transition-all duration-200 flex flex-col h-full"
                 >
                   <div className="h-full">
                     <CardPortfolio

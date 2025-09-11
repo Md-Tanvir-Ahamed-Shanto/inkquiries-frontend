@@ -84,10 +84,10 @@ const LoginPage = () => {
   ];
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-white overflow-hidden">
+    <div className="flex flex-col md:flex-row w-full items-center md:px-24 justify-center min-h-screen bg-white overflow-hidden">
       {/* Login Form Section */}
-      <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12">
-        <div className="w-full max-w-md">
+      <div className=" flex flex-col w-full items-center justify-center p-6 md:p-12">
+        <div className="w-full max-w-3xl">
           <div className="mb-8 md:mb-12">
             <h1 className="text-neutral-800 text-3xl md:text-4xl font-bold font-['Inter'] leading-tight mb-2">
               Welcome back
@@ -100,30 +100,7 @@ const LoginPage = () => {
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            <div className="flex gap-2 mb-4">
-              <button
-                type="button"
-                className={`flex-1 h-12 px-6 py-4 bg-slate-50 rounded-lg flex justify-center items-center gap-2.5 text-zinc-950 text-base font-semibold font-['Inter'] leading-normal ${
-                  activeUserType === "Client"
-                    ? " outline-[1.50px] outline-offset-[-1.50px] outline-black"
-                    : ""
-                }`}
-                onClick={() => setActiveUserType("Client")}
-              >
-                Client
-              </button>
-              <button
-                type="button"
-                className={`flex-1 h-12 px-6 py-4 bg-slate-50 rounded-lg flex justify-center items-center gap-2.5 text-zinc-950 text-base font-semibold font-['Inter'] leading-normal ${
-                  activeUserType === "Artist"
-                    ? " outline-[1.50px] outline-offset-[-1.50px] outline-black"
-                    : ""
-                }`}
-                onClick={() => setActiveUserType("Artist")}
-              >
-                Artist
-              </button>
-            </div>
+           
             {formFields.map((field) => (
               <div
                 key={field.name}
@@ -206,7 +183,7 @@ const LoginPage = () => {
       </div>
 
       {/* Image Section */}
-      <div className="hidden md:flex flex-1 justify-center items-center p-6 rounded-xl">
+      <div className="hidden md:flex w-full justify-center items-center p-6 rounded-xl">
         <Image
           src={AuthImage}
           alt="auth"

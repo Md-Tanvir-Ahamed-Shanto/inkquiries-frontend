@@ -20,7 +20,7 @@ function CardPortfolio({ title, style, placement, imageUrl, description, likesCo
               src={imageUrl?.[0] ? `${baseUrl}${imageUrl[0]}` : placeHolderImage}
               alt={title}
               fill
-              className="object-contain"
+              className="object-cover"
             />
           </div>
           
