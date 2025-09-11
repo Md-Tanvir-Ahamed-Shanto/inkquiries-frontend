@@ -109,12 +109,13 @@ function Sidebar({ isOpen, onClose }) {
       }`}>
         <div className="p-4 font-bold text-xl h-[85px] flex items-center">
           <div className="justify-start">
+          <Link href={"/"}>
             <span className="text-black text-3xl font-bold font-['Inter'] capitalize leading-9">
               Ink
             </span>
             <span className="text-zinc-600 text-3xl font-bold font-['Inter'] capitalize leading-9">
               quiries
-            </span>
+            </span></Link>
           </div>
         </div>
 

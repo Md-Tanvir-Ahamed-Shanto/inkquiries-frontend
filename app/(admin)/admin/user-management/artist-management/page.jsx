@@ -94,13 +94,15 @@ export default function ArtistTable() {
   const [showOriginal, setShowOriginal] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [artists, setArtists] = useState([]);
+  const [filteredArtists, setFilteredArtists] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({
-    total: 0,
     page: 1,
-    limit: 8,
-    pages: 0
+    limit: 10,
+    pages: 1,
+    total: 0,
   });
   const [showEntriesDropdown, setShowEntriesDropdown] = useState(false);
 
@@ -322,7 +324,7 @@ useEffect(() => {
           <table className="w-full">
             {/* Table Header */}
             <thead>
-              <tr className="w-full flex items-center">
+              <tr className="w-full flex items-start">
                 <th className="w-[20%] min-w-[192px] h-16 px-3 py-6 bg-slate-50 flex items-center">
                   <div className="text-neutral-600 text-sm font-medium font-['Inter'] uppercase leading-none">
                     Artist name
@@ -361,7 +363,7 @@ useEffect(() => {
               {artists.map((artist) => (
                 <tr
                   key={artist.id}
-                  className="w-full flex border-t items-center justify-center border-zinc-200"
+                  className="w-full flex border-t items-start justify-center border-zinc-200 hover:bg-gray-50 transition-colors duration-150"
                 >
                   {/* Artist Name */}
                   <td className="w-[20%] min-w-[192px] h-16 px-3 py-6 bg-white flex items-center gap-2.5">
@@ -414,13 +416,17 @@ useEffect(() => {
                   {/* Action */}
                   <td className="w-[12%] min-w-[180px] h-16 px-3 py-6 bg-white flex items-center gap-3">
                     <div 
-                      className="text-gray-600 text-sm font-normal  capitalize leading-none cursor-pointer"
+                      className="text-gray-600 text-sm font-normal capitalize leading-none cursor-pointer flex items-center gap-1.5 hover:text-blue-600 transition-colors"
                       onClick={() => router.push(`/admin/user-management/artist-details/${artist.id}`)}
                     >
-                      View details
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    
                     </div>
                     <div 
-                       className={`${artist.isActive ? 'text-red-500' : 'text-green-500'} text-sm font-normal  capitalize leading-none cursor-pointer`}
+                       className={`${artist.isActive ? 'text-red-500' : 'text-green-500'} text-sm font-normal capitalize leading-none cursor-pointer flex items-center gap-1.5 hover:opacity-80 transition-colors`}
                        onClick={async () => {
                          try {
                            const status = artist.isActive ? 'restricted' : 'active';
@@ -434,10 +440,17 @@ useEffect(() => {
                          }
                        }}
                      >
-                       {artist.isActive ? 'Deactivate' : 'Activate'}
+                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                         {artist.isActive ? (
+                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                         ) : (
+                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                         )}
+                       </svg>
+                     
                     </div>
                     <div 
-                      className="text-red-500 text-sm font-normal  capitalize leading-none cursor-pointer"
+                      className="text-red-500 text-sm font-normal capitalize leading-none cursor-pointer flex items-center gap-1.5 hover:opacity-80 transition-colors"
                       onClick={async () => {
                         if (window.confirm('Are you sure you want to delete this artist?')) {
                           try {
@@ -451,7 +464,10 @@ useEffect(() => {
                         }
                       }}
                     >
-                      Delete
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                
                     </div>
                   </td>
                 </tr>
@@ -461,128 +477,81 @@ useEffect(() => {
         </div>
       )}
 
-      {/* Mobile Table */}
+      {/* Mobile Table - Card Based Design */}
       {!loading && !error && (
-        <div className="md:hidden w-full -mx-3 overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100" 
-               style={{ 
-                 scrollbarWidth: 'thin',
-                 WebkitOverflowScrolling: 'touch'
-               }}>
-          <div className="min-w-[980px] bg-white rounded-lg border border-gray-100">
-            {/* Table Header */}
-            <div className="w-full flex">
-              <div className="w-[200px] h-12 px-2 py-3 bg-slate-50 flex items-center border-r border-gray-200">
-                <div className="text-neutral-600 text-xs font-medium uppercase leading-none">
-                  Artist name
-                </div>
-              </div>
-              <div className="w-[180px] h-12 px-2 py-3 bg-slate-50 flex items-center border-r border-gray-200">
-                <div className="text-neutral-600 text-xs font-medium uppercase leading-none">
-                  email
-                </div>
-              </div>
-              <div className="w-[200px] h-12 px-2 py-3 bg-slate-50 flex items-center border-r border-gray-200">
-                <div className="text-neutral-600 text-xs font-medium uppercase leading-none">
-                  Social handle
-                </div>
-              </div>
-              <div className="w-[120px] h-12 px-2 py-3 bg-slate-50 flex items-center border-r border-gray-200">
-                <div className="text-neutral-600 text-xs font-medium uppercase leading-none">
-                  Status
-                </div>
-              </div>
-              <div className="w-[120px] h-12 px-2 py-3 bg-slate-50 flex items-center border-r border-gray-200">
-                <div className="text-neutral-600 text-xs font-medium uppercase leading-none">
-                  Joined
-                </div>
-              </div>
-              <div className="w-[120px] h-12 px-2 py-3 bg-slate-50 flex items-center">
-                <div className="text-neutral-600 text-xs font-medium uppercase leading-none">
-                  Action
-                </div>
-              </div>
-            </div>
-
-            {/* Table Rows */}
+        <div className="md:hidden w-full">
+          <div className="w-full flex flex-col gap-4">
+            {/* Card Based Layout */}
             {artists.map((artist) => (
               <div
                 key={artist.id}
-                className="w-full flex border-t border-zinc-200"
+                className="w-full rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-all duration-150 bg-white"
               >
-                {/* Artist Name */}
-                <div className="w-[200px] h-12 px-2 py-3 bg-white flex items-center gap-2 border-r border-gray-200">
-                  <img
-                    className="w-5 h-5 rounded-full border border-gray-100 flex-shrink-0"
-                    src={artist.profilePhoto ? `${artist.profilePhoto}` : "/assets/profile.png"}
-                    alt={artist.name}
-                  />
-                  <div className="text-neutral-600 text-xs font-normal capitalize leading-none truncate">
-                    {artist.name}
-                  </div>
-                </div>
-
-                {/* Email */}
-                <div className="w-[180px] h-12 px-2 py-3 bg-white flex items-center border-r border-gray-200">
-                  <div className="text-neutral-600 text-xs font-normal leading-none truncate">
-                    {artist.email}
-                  </div>
-                </div>
-
-                {/* Social Handle */}
-                <div className="w-[200px] h-12 px-2 py-3 bg-white flex items-center border-r border-gray-200">
-                  <div className="text-neutral-600 text-xs font-normal leading-none truncate">
-                    {artist.socialHandle}
-                  </div>
-                </div>
-
-                {/* Status */}
-                <div className="w-[120px] h-12 px-2 py-3 bg-white flex items-center border-r border-gray-200">
-                  <div
-                    className={`px-2 py-1 rounded-full text-xs ${
-                      artist.isActive
-                        ? "bg-emerald-50 text-green-500"
-                        : "bg-rose-50 text-rose-500"
-                    }`}
-                  >
-                    <div className="text-xs font-normal capitalize leading-none">
+                <div className="p-4 border-b border-gray-100">
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="text-gray-800 font-medium">{artist.name}</h3>
+                    <span className={`px-2 py-1 rounded-full text-xs ${artist.isActive ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
                       {artist.isActive ? 'Active' : 'Restricted'}
+                    </span>
+                  </div>
+                  
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-start">
+                      <span className="text-gray-500 w-24">Email:</span>
+                      <span className="text-gray-700 flex-1 break-all">{artist.email}</span>
+                    </div>
+                    
+                    <div className="flex items-start">
+                      <span className="text-gray-500 w-24">Social Handle:</span>
+                      <span className="text-gray-700 flex-1">{artist.socialHandle || 'N/A'}</span>
+                    </div>
+                    
+                    <div className="flex items-start">
+                      <span className="text-gray-500 w-24">Joined:</span>
+                      <span className="text-gray-700 flex-1">{artist.joined}</span>
                     </div>
                   </div>
                 </div>
-
-                {/* Joined Date */}
-                <div className="w-[120px] h-12 px-2 py-3 bg-white flex items-center border-r border-gray-200">
-                  <div className="text-neutral-600 text-xs font-normal capitalize leading-none">
-                    {artist.joined}
-                  </div>
-                </div>
-
-                {/* Action */}
-                <div className="w-[180px] h-12 px-2 py-3 bg-white flex items-center gap-3">
-                  <div 
-                    className="text-gray-600 text-xs font-normal  capitalize leading-none cursor-pointer"
+                
+                {/* Actions */}
+                <div className="flex justify-between items-center p-3 bg-gray-50">
+                  <button 
+                    className="text-blue-600 text-xs font-medium capitalize leading-none cursor-pointer flex items-center gap-1 hover:text-blue-700 transition-colors"
                     onClick={() => router.push(`/admin/user-management/artist-details/${artist.id}`)}
                   >
-                    View details
-                  </div>
-                  <div 
-                     className={`${artist.isActive ? 'text-red-500' : 'text-green-500'} text-xs font-normal  capitalize leading-none cursor-pointer`}
-                     onClick={async () => {
-                       try {
-                         const status = artist.isActive ? 'restricted' : 'active';
-                         await updateArtistStatus(artist.id, status);
-                         toast.success(`Artist ${status === 'active' ? 'activated' : 'deactivated'} successfully`);
-                         fetchArtists(); // Refresh the list
-                       } catch (error) {
-                         console.error('Error updating artist status:', error);
-                         toast.error('Failed to update artist status');
-                       }
-                     }}
-                   >
-                     {artist.isActive ? 'Deactivate' : 'Activate'}
-                  </div>
-                  <div 
-                    className="text-red-500 text-xs font-normal  capitalize leading-none cursor-pointer"
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                   
+                  </button>
+                  
+                  <button 
+                    className={`${artist.isActive ? 'text-red-500 hover:text-red-600' : 'text-green-500 hover:text-green-600'} text-xs font-medium capitalize leading-none cursor-pointer flex items-center gap-1 transition-colors`}
+                    onClick={async () => {
+                      try {
+                        const status = artist.isActive ? 'restricted' : 'active';
+                        await updateArtistStatus(artist.id, status);
+                        toast.success(`Artist ${status === 'active' ? 'activated' : 'deactivated'} successfully`);
+                        fetchArtists(); // Refresh the list
+                      } catch (error) {
+                        console.error('Error updating artist status:', error);
+                        toast.error('Failed to update artist status');
+                      }
+                    }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      {artist.isActive ? (
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                      ) : (
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      )}
+                    </svg>
+                  
+                  </button>
+                  
+                  <button 
+                    className="text-red-500 text-xs font-medium capitalize leading-none cursor-pointer flex items-center gap-1 hover:text-red-600 transition-colors"
                     onClick={async () => {
                       if (window.confirm('Are you sure you want to delete this artist?')) {
                         try {
@@ -596,8 +565,11 @@ useEffect(() => {
                       }
                     }}
                   >
-                    Delete
-                  </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  
+                  </button>
                 </div>
               </div>
             ))}
@@ -613,14 +585,12 @@ useEffect(() => {
               {/* Previous Page Button */}
               <button 
                 onClick={() => pagination.page > 1 && setPagination({...pagination, page: pagination.page - 1})}
-                className={`w-8 h-8 rounded-lg border border-gray-100 flex justify-center items-center ${pagination.page <= 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                className={`w-8 h-8 rounded-lg border ${pagination.page <= 1 ? 'bg-gray-50 border-gray-200 opacity-50 cursor-not-allowed' : 'border-gray-200 bg-white hover:bg-gray-50 cursor-pointer transition-colors'} flex justify-center items-center`}
                 disabled={pagination.page <= 1}
               >
-                <img
-                  src="/icon/right.svg"
-                  className="w-3 sm:w-4 h-3 sm:h-4 relative rotate-180"
-                  alt="previous"
-                />
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
               </button>
               
               {/* Page Numbers */}
@@ -631,9 +601,9 @@ useEffect(() => {
                     <button 
                       key={pageNum}
                       onClick={() => setPagination({...pagination, page: pageNum})}
-                      className={`w-7 sm:w-8 h-7 sm:h-8 px-2 sm:px-3.5 py-1 sm:py-[5px] ${pagination.page === pageNum ? 'bg-stone-50 rounded-[10px] border border-gray-100' : ''}`}
+                      className={`w-7 sm:w-8 h-7 sm:h-8 px-2 sm:px-3.5 py-1 sm:py-[5px] ${pagination.page === pageNum ? 'bg-blue-50 text-blue-600 rounded-[10px] border border-blue-100' : 'hover:bg-gray-50 transition-colors'}`}
                     >
-                      <div className="text-neutral-900 text-xs font-medium">
+                      <div className={`text-xs font-medium ${pagination.page === pageNum ? 'text-blue-600' : 'text-neutral-900'}`}>
                         {pageNum}
                       </div>
                     </button>
@@ -653,9 +623,9 @@ useEffect(() => {
                 {pagination.pages > 3 && (
                   <button 
                     onClick={() => setPagination({...pagination, page: pagination.pages})}
-                    className={`hidden sm:block w-8 h-8 px-2.5 py-[5px] ${pagination.page === pagination.pages ? 'bg-stone-50 rounded-[10px] border border-gray-100' : ''}`}
+                    className={`hidden sm:block w-8 h-8 px-2.5 py-[5px] ${pagination.page === pagination.pages ? 'bg-blue-50 text-blue-600 rounded-[10px] border border-blue-100' : 'hover:bg-gray-50 transition-colors'}`}
                   >
-                    <div className="text-neutral-900 text-xs font-medium">
+                    <div className={`text-xs font-medium ${pagination.page === pagination.pages ? 'text-blue-600' : 'text-neutral-900'}`}>
                       {pagination.pages}
                     </div>
                   </button>
@@ -665,14 +635,12 @@ useEffect(() => {
               {/* Next Page Button */}
               <button 
                 onClick={() => pagination.page < pagination.pages && setPagination({...pagination, page: pagination.page + 1})}
-                className={`w-8 h-8 rounded-lg border border-gray-100 flex justify-center items-center ${pagination.page >= pagination.pages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                className={`w-8 h-8 rounded-lg border ${pagination.page >= pagination.pages ? 'bg-gray-50 border-gray-200 opacity-50 cursor-not-allowed' : 'border-gray-200 bg-white hover:bg-gray-50 cursor-pointer transition-colors'} flex justify-center items-center`}
                 disabled={pagination.page >= pagination.pages}
               >
-                <img 
-                  src="/icon/right.svg" 
-                  className="w-3 sm:w-4 h-3 sm:h-4 relative"
-                  alt="next" 
-                />
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </button>
             </div>
             
