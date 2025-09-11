@@ -22,6 +22,8 @@ const ReviewTable = () => {
   const filterRef = useRef(null);
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [filteredReviews, setFilteredReviews] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,55 +46,75 @@ const ReviewTable = () => {
   };
 
   // Fetch reviews from API
+  const fetchReviews = async () => {
+    try {
+      setLoading(true);
+      const response = await getAllReviews({
+        limit: 100, // Get more reviews at once for client-side filtering
+        status: null, // Get all statuses
+      });
+
+      // Transform API response to match the component's expected structure
+      const formattedReviews = response.reviews.map((review) => ({
+        id: review.id,
+        name: review.client?.name || "Unknown Client",
+        content: review.content || "",
+        profilePhoto: review.client?.profilePhoto
+          ? `${backendUrl}${review.client?.profilePhoto}`
+          : "/assets/profile.png",
+        artist: review.artist?.username
+          ? `@${review.artist.username}`
+          : "N/A",
+        date: new Date(review.createdAt)
+          .toLocaleDateString("en-US", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })
+          ?.toLowerCase(),
+        status: review.status?.toLowerCase(),
+        statusVariant:
+          review.status?.toLowerCase() === "active"
+            ? "Default"
+            : review.status?.toLowerCase() === "restricted"
+            ? "Variant3"
+            : "Default",
+      }));
+
+      setReviews(formattedReviews);
+      setFilteredReviews(formattedReviews);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching reviews:", err);
+      setError("Failed to load reviews. Please try again.");
+      setLoading(false);
+    }
+  };
+
+  // Fetch reviews only on component mount
   useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        setLoading(true);
-        const response = await getAllReviews({
-          page: currentPage,
-          limit: pageSize,
-          status: statusFilter,
-        });
-
-        // Transform API response to match the component's expected structure
-        const formattedReviews = response.reviews.map((review) => ({
-          id: review.id,
-          name: review.client?.name || "Unknown Client",
-          content: review.content || "",
-          profilePhoto: review.client?.profilePhoto
-            ? `${backendUrl}${review.client?.profilePhoto}`
-            : "/assets/profile.png",
-          artist: review.artist?.username
-            ? `@${review.artist.username}`
-            : "N/A",
-          date: new Date(review.createdAt)
-            .toLocaleDateString("en-US", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            })
-            ?.toLowerCase(),
-          status: review.status?.toLowerCase(),
-          statusVariant:
-            review.status?.toLowerCase() === "active"
-              ? "Default"
-              : review.status?.toLowerCase() === "restricted"
-              ? "Variant3"
-              : "Default",
-        }));
-
-        setReviews(formattedReviews);
-        setTotalPages(Math.ceil(response.meta?.total / pageSize));
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching reviews:", err);
-        setError("Failed to load reviews. Please try again.");
-        setLoading(false);
-      }
-    };
-
     fetchReviews();
-  }, [currentPage, pageSize, statusFilter]);
+  }, []);
+  
+  // Filter reviews based on search term and status
+  useEffect(() => {
+    if (!reviews.length) return;
+    
+    const filtered = reviews.filter((review) => {
+      const matchesSearch = !searchTerm || 
+        review.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        review.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        review.artist.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesStatus = !statusFilter || review.status === statusFilter;
+      
+      return matchesSearch && matchesStatus;
+    });
+    
+    setFilteredReviews(filtered);
+    setTotalPages(Math.ceil(filtered.length / pageSize));
+    setCurrentPage(1);
+  }, [reviews, searchTerm, statusFilter, pageSize]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -105,11 +127,46 @@ const ReviewTable = () => {
   }, []);
 
   return (
-    <div className="w-full px-3 sm:px-6 pt-4 sm:pt-6 pb-4 bg-white rounded-lg flex flex-col gap-4 sm:gap-5 overflow-hidden">
-      {/* Header with title and filter */}
+    <div className="w-full h-full px-3 sm:px-6 pt-4 sm:pt-6 pb-4 bg-white rounded-lg flex flex-col gap-4 sm:gap-5 overflow-hidden">
+      {/* Header with title, search and filter */}
       <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
-        <div className="text-black text-lg sm:text-xl font-semibold font-['Inter'] capitalize leading-normal">
-          All Review
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
+          <div className="text-black text-lg sm:text-xl font-semibold font-['Inter'] capitalize leading-normal">
+            All Review
+          </div>
+          
+          {/* Search Input */}
+          <div className="relative w-full sm:w-64">
+            <input
+              type="text"
+              placeholder="Search reviews..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full h-9 px-3 py-2 bg-white rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-blue-500"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1 1L13 13M1 13L13 1"
+                    stroke="#6B7280"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
         </div>
         {/* Filter Dropdown */}
         <div className="relative w-full sm:w-auto" ref={filterRef}>
@@ -222,7 +279,7 @@ const ReviewTable = () => {
                   </div>
                 </td>
               </tr>
-            ) : reviews.length === 0 ? (
+            ) : filteredReviews.length === 0 ? (
               <tr className="w-full flex border-t border-zinc-200">
                 <td
                   colSpan="6"
@@ -234,7 +291,9 @@ const ReviewTable = () => {
                 </td>
               </tr>
             ) : (
-              reviews.map((review) => (
+              filteredReviews
+                .slice((currentPage - 1) * pageSize, currentPage * pageSize)
+                .map((review) => (
                 <tr
                   key={review.id}
                   className="w-full flex border-t border-zinc-200"
@@ -363,16 +422,18 @@ const ReviewTable = () => {
                 <div className="text-red-500 text-xs font-normal">{error}</div>
               </div>
             </div>
-          ) : reviews.length === 0 ? (
-            <div className="w-full flex border-t border-zinc-200">
-              <div className="w-full h-12 px-2 py-3 bg-white flex items-center justify-center">
-                <div className="text-neutral-600 text-xs font-normal">
-                  No reviews found
+          ) : filteredReviews.length === 0 ? (
+              <div className="w-full flex border-t border-zinc-200">
+                <div className="w-full h-12 px-2 py-3 bg-white flex items-center justify-center">
+                  <div className="text-neutral-600 text-xs font-normal">
+                    No reviews found
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            reviews.map((review) => (
+            ) : (
+              filteredReviews
+                .slice((currentPage - 1) * pageSize, currentPage * pageSize)
+                .map((review) => (
               <div
                 key={review.id}
                 className="w-full flex border-t border-zinc-200"
@@ -449,9 +510,7 @@ const ReviewTable = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className={`w-8 h-8 rounded-lg border border-gray-100 flex justify-center items-center ${
-                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`w-8 h-8 rounded-lg border border-gray-100 flex justify-center items-center ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               <img
                 src="/icon/right.svg"
@@ -459,17 +518,13 @@ const ReviewTable = () => {
               />
             </button>
             <div className="flex items-center">
-              {Array.from({ length: Math.min(totalPages, 3) }, (_, i) => {
+              {Array.from({ length: Math.min(Math.ceil(filteredReviews.length / pageSize), 3) }, (_, i) => {
                 const pageNum = i + 1;
                 return (
                   <button
                     key={pageNum}
                     onClick={() => setCurrentPage(pageNum)}
-                    className={`w-7 sm:w-8 h-7 sm:h-8 px-2 sm:px-3.5 py-1 sm:py-[5px] ${
-                      currentPage === pageNum
-                        ? "bg-stone-50 rounded-[10px] border border-gray-100"
-                        : ""
-                    }`}
+                    className={`w-7 sm:w-8 h-7 sm:h-8 px-2 sm:px-3.5 py-1 sm:py-[5px] ${currentPage === pageNum ? "bg-stone-50 rounded-[10px] border border-gray-100" : ""}`}
                   >
                     <div className="text-neutral-900 text-xs font-medium">
                       {pageNum}
@@ -477,7 +532,7 @@ const ReviewTable = () => {
                   </button>
                 );
               })}
-              {totalPages > 3 && (
+              {Math.ceil(filteredReviews.length / pageSize) > 3 && (
                 <>
                   <button className="hidden sm:block w-8 h-8 px-3 py-[5px]">
                     <div className="text-neutral-900 text-xs font-medium">
@@ -485,15 +540,11 @@ const ReviewTable = () => {
                     </div>
                   </button>
                   <button
-                    onClick={() => setCurrentPage(totalPages)}
-                    className={`hidden sm:block w-8 h-8 px-2.5 py-[5px] ${
-                      currentPage === totalPages
-                        ? "bg-stone-50 rounded-[10px] border border-gray-100"
-                        : ""
-                    }`}
+                    onClick={() => setCurrentPage(Math.ceil(filteredReviews.length / pageSize))}
+                    className={`hidden sm:block w-8 h-8 px-2.5 py-[5px] ${currentPage === Math.ceil(filteredReviews.length / pageSize) ? "bg-stone-50 rounded-[10px] border border-gray-100" : ""}`}
                   >
                     <div className="text-neutral-900 text-xs font-medium">
-                      {totalPages}
+                      {Math.ceil(filteredReviews.length / pageSize)}
                     </div>
                   </button>
                 </>
@@ -501,14 +552,10 @@ const ReviewTable = () => {
             </div>
             <button
               onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(filteredReviews.length / pageSize)))
               }
-              disabled={currentPage === totalPages}
-              className={`w-8 h-8 rounded-lg border border-gray-100 flex justify-center items-center ${
-                currentPage === totalPages
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
-              }`}
+              disabled={currentPage === Math.ceil(filteredReviews.length / pageSize)}
+              className={`w-8 h-8 rounded-lg border border-gray-100 flex justify-center items-center ${currentPage === Math.ceil(filteredReviews.length / pageSize) ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               <img
                 src="/icon/right.svg"
@@ -520,10 +567,10 @@ const ReviewTable = () => {
             <div className="text-zinc-700 text-xs font-medium text-center sm:text-left">
               {loading
                 ? "Loading..."
-                : `Showing ${(currentPage - 1) * pageSize + 1} to ${Math.min(
+                : `Showing ${filteredReviews.length > 0 ? (currentPage - 1) * pageSize + 1 : 0} to ${Math.min(
                     currentPage * pageSize,
-                    (currentPage - 1) * pageSize + reviews.length
-                  )} of ${totalPages * pageSize} entries`}
+                    filteredReviews.length
+                  )} of ${filteredReviews.length} entries`}
             </div>
             <div className="relative">
               <button

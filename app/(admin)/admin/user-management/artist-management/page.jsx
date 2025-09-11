@@ -190,10 +190,49 @@ export default function ArtistTable() {
     }
   };
 
-// Fetch artists data
+// Filter artists based on search term
+useEffect(() => {
+  if (searchTerm) {
+    const filtered = artists.filter(artist => 
+      artist.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      artist.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      artist.socialHandle.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredArtists(filtered);
+    // Reset to first page when filtering
+    setPagination(prev => ({...prev, page: 1}));
+  } else {
+    setFilteredArtists(artists);
+  }
+}, [searchTerm, artists]);
+
+// Apply filters client-side
+useEffect(() => {
+  if (selectedFilter) {
+    let filtered = [...artists];
+    
+    if (selectedFilter === "Name (A-Z)") {
+      filtered.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (selectedFilter === "Status") {
+      filtered.sort((a, b) => {
+        const statusA = a.isActive ? "Active" : "Restricted";
+        const statusB = b.isActive ? "Active" : "Restricted";
+        return statusA.localeCompare(statusB);
+      });
+    } else if (selectedFilter === "Join Date Range") {
+      filtered.sort((a, b) => new Date(b.joined) - new Date(a.joined));
+    }
+    
+    setFilteredArtists(filtered);
+  } else {
+    setFilteredArtists(artists);
+  }
+}, [selectedFilter, artists]);
+
+// Fetch artists data only once on component mount
 useEffect(() => {
   fetchArtists();
-}, [pagination.page, pagination.limit, selectedFilter]);
+}, []);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -209,13 +248,33 @@ useEffect(() => {
   }, []);
 
   return (
-    <div className="w-full px-3 sm:px-6 pt-4 sm:pt-6 pb-4 bg-white rounded-lg flex flex-col gap-4 sm:gap-5 overflow-hidden">
+    <div className="w-full h-full px-3 sm:px-6 pt-4 sm:pt-6 pb-4 bg-white rounded-lg flex flex-col gap-4 sm:gap-5 overflow-hidden">
       {/* Header */}
       <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
         <div className="text-black text-lg sm:text-xl font-semibold font-['Inter'] capitalize leading-normal">
           Artist Management
         </div>
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+          {/* Search Input */}
+          <div className="relative w-full sm:w-64">
+            <input
+              type="text"
+              placeholder="Search artists..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full h-8 sm:h-10 px-3 sm:px-4 py-2 bg-white rounded-md border border-zinc-200 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
           {/* Original Dropdown */}
           <div className="relative inline-block w-full sm:w-auto" ref={originalRef}>
             <div
@@ -360,7 +419,9 @@ useEffect(() => {
 
             {/* Table Body */}
             <tbody>
-              {artists.map((artist) => (
+              {filteredArtists
+                .slice((pagination.page - 1) * pagination.limit, pagination.page * pagination.limit)
+                .map((artist) => (
                 <tr
                   key={artist.id}
                   className="w-full flex border-t items-start justify-center border-zinc-200 hover:bg-gray-50 transition-colors duration-150"
@@ -482,7 +543,9 @@ useEffect(() => {
         <div className="md:hidden w-full">
           <div className="w-full flex flex-col gap-4">
             {/* Card Based Layout */}
-            {artists.map((artist) => (
+            {filteredArtists
+              .slice((pagination.page - 1) * pagination.limit, pagination.page * pagination.limit)
+              .map((artist) => (
               <div
                 key={artist.id}
                 className="w-full rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-all duration-150 bg-white"
@@ -578,7 +641,7 @@ useEffect(() => {
       )}
 
       {/* Pagination */}
-      {!loading && !error && artists.length > 0 && (
+      {!loading && !error && filteredArtists.length > 0 && (
         <div className="w-full p-2 sm:p-4 bg-white border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
           <div className="flex-1 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
             <div className="flex items-center gap-3 sm:gap-6">
@@ -595,7 +658,7 @@ useEffect(() => {
               
               {/* Page Numbers */}
               <div className="flex items-center">
-                {Array.from({ length: Math.min(pagination.pages, 3) }, (_, i) => {
+                {Array.from({ length: Math.min(Math.ceil(filteredArtists.length / pagination.limit), 3) }, (_, i) => {
                   const pageNum = i + 1;
                   return (
                     <button 
@@ -611,7 +674,7 @@ useEffect(() => {
                 })}
                 
                 {/* Ellipsis for many pages */}
-                {pagination.pages > 3 && (
+                {Math.ceil(filteredArtists.length / pagination.limit) > 3 && (
                   <button className="hidden sm:block w-8 h-8 px-3 py-[5px]">
                     <div className="text-neutral-900 text-xs font-medium">
                       ...
@@ -620,13 +683,13 @@ useEffect(() => {
                 )}
                 
                 {/* Last page button */}
-                {pagination.pages > 3 && (
+                {Math.ceil(filteredArtists.length / pagination.limit) > 3 && (
                   <button 
-                    onClick={() => setPagination({...pagination, page: pagination.pages})}
-                    className={`hidden sm:block w-8 h-8 px-2.5 py-[5px] ${pagination.page === pagination.pages ? 'bg-blue-50 text-blue-600 rounded-[10px] border border-blue-100' : 'hover:bg-gray-50 transition-colors'}`}
+                    onClick={() => setPagination({...pagination, page: Math.ceil(filteredArtists.length / pagination.limit)})}
+                    className={`hidden sm:block w-8 h-8 px-2.5 py-[5px] ${pagination.page === Math.ceil(filteredArtists.length / pagination.limit) ? 'bg-blue-50 text-blue-600 rounded-[10px] border border-blue-100' : 'hover:bg-gray-50 transition-colors'}`}
                   >
-                    <div className={`text-xs font-medium ${pagination.page === pagination.pages ? 'text-blue-600' : 'text-neutral-900'}`}>
-                      {pagination.pages}
+                    <div className={`text-xs font-medium ${pagination.page === Math.ceil(filteredArtists.length / pagination.limit) ? 'text-blue-600' : 'text-neutral-900'}`}>
+                      {Math.ceil(filteredArtists.length / pagination.limit)}
                     </div>
                   </button>
                 )}
@@ -634,9 +697,9 @@ useEffect(() => {
               
               {/* Next Page Button */}
               <button 
-                onClick={() => pagination.page < pagination.pages && setPagination({...pagination, page: pagination.page + 1})}
-                className={`w-8 h-8 rounded-lg border ${pagination.page >= pagination.pages ? 'bg-gray-50 border-gray-200 opacity-50 cursor-not-allowed' : 'border-gray-200 bg-white hover:bg-gray-50 cursor-pointer transition-colors'} flex justify-center items-center`}
-                disabled={pagination.page >= pagination.pages}
+                onClick={() => pagination.page < Math.ceil(filteredArtists.length / pagination.limit) && setPagination({...pagination, page: pagination.page + 1})}
+                className={`w-8 h-8 rounded-lg border ${pagination.page >= Math.ceil(filteredArtists.length / pagination.limit) ? 'bg-gray-50 border-gray-200 opacity-50 cursor-not-allowed' : 'border-gray-200 bg-white hover:bg-gray-50 cursor-pointer transition-colors'} flex justify-center items-center`}
+                disabled={pagination.page >= Math.ceil(filteredArtists.length / pagination.limit)}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -647,7 +710,7 @@ useEffect(() => {
             {/* Entries info and limit selector */}
             <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
               <div className="text-zinc-700 text-xs font-medium text-center sm:text-left">
-                Showing {((pagination.page - 1) * pagination.limit) + 1} to {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total} entries
+                Showing {((pagination.page - 1) * pagination.limit) + 1} to {Math.min(pagination.page * pagination.limit, filteredArtists.length)} of {filteredArtists.length} entries
               </div>
               
               {/* Show entries dropdown */}
