@@ -18,9 +18,7 @@ function Portfolio() {
   // Get user from localStorage safely
   const userString = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
   const artistId = userString ? JSON.parse(userString)?.id : 'me';
-  
-  useEffect(() => {
-    const fetchPortfolio = async () => {
+   const fetchPortfolio = async () => {
       try {
         const data = await getArtistPortfolio(artistId);
         setPortfolio(data);
@@ -30,6 +28,9 @@ function Portfolio() {
         setLoading(false);
       }
     };
+    
+  useEffect(() => {
+   
 
     fetchPortfolio();
   }, [artistId]);
@@ -176,10 +177,7 @@ function Portfolio() {
             </button>
           </div>
           <PortfolioUploadForm
-            onSuccess={(newItem) => {
-              setPortfolio(prev => [...prev, newItem]);
-              setUploadModal(false);
-            }}
+            fetchPortfolio={fetchPortfolio}
             onClose={() => setUploadModal(false)}
           />
         </div>

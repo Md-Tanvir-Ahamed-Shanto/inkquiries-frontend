@@ -1,13 +1,12 @@
-import { addPortfolioItem } from '../../service/portfolioApi';
-import React, { useState } from 'react';
+import { addPortfolioItem } from "../../service/portfolioApi";
+import React, { useState } from "react";
 
-
-function PortfolioUploadForm({ onSuccess, onClose }) {
+function PortfolioUploadForm({ fetchPortfolio, onClose }) {
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    style: '',
-    placement: '',
+    title: "",
+    description: "",
+    style: "",
+    placement: "",
   });
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -15,16 +14,16 @@ function PortfolioUploadForm({ onSuccess, onClose }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     if (selectedFiles.length > 3) {
-      setError('Maximum 3 photos allowed');
+      setError("Maximum 3 photos allowed");
       return;
     }
     setFiles(selectedFiles);
@@ -38,28 +37,29 @@ function PortfolioUploadForm({ onSuccess, onClose }) {
 
     try {
       if (files.length === 0) {
-        throw new Error('Please select at least one photo');
+        throw new Error("Please select at least one photo");
       }
 
       const formDataToSend = new FormData();
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('style', formData.style);
-      formDataToSend.append('placement', formData.placement);
+      formDataToSend.append("title", formData.title);
+      formDataToSend.append("description", formData.description);
+      formDataToSend.append("style", formData.style);
+      formDataToSend.append("placement", formData.placement);
 
-      files.forEach(file => {
-        formDataToSend.append('portfolioImages', file);
+      files.forEach((file) => {
+        formDataToSend.append("portfolioImages", file);
       });
-  for (let pair of formDataToSend.entries()) {
-    console.log(pair[0] + ': ' + pair[1]);
-  }
-  console.log("run addPortfolioItem",formDataToSend)
+      for (let pair of formDataToSend.entries()) {
+        console.log(pair[0] + ": " + pair[1]);
+      }
       const response = await addPortfolioItem(formDataToSend);
-      onSuccess(response);
+      fetchPortfolio();
       onClose();
     } catch (err) {
-      setError(err.message || 'Failed to upload portfolio item');
+      fetchPortfolio();
+      setError(err.message || "Failed to upload portfolio item");
     } finally {
+      fetchPortfolio();
       setLoading(false);
     }
   };
@@ -134,9 +134,7 @@ function PortfolioUploadForm({ onSuccess, onClose }) {
         />
       </div>
 
-      {error && (
-        <div className="text-red-500 text-sm">{error}</div>
-      )}
+      {error && <div className="text-red-500 text-sm">{error}</div>}
 
       <div className="flex justify-end gap-3 mt-6">
         <button
@@ -152,7 +150,7 @@ function PortfolioUploadForm({ onSuccess, onClose }) {
           className="px-4 py-2 text-sm font-medium text-white bg-black rounded-md hover:bg-gray-900 disabled:bg-gray-400"
           disabled={loading}
         >
-          {loading ? 'Uploading...' : 'Upload'}
+          {loading ? "Uploading..." : "Upload"}
         </button>
       </div>
     </form>

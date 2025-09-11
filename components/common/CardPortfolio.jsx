@@ -27,7 +27,7 @@ function CardPortfolio({ title, style, placement, imageUrl, description, likesCo
           {/* Content Section */}
           <div className="self-stretch flex flex-col justify-start items-start gap-4">
             {/* Title */}
-            <div className="self-stretch justify-start text-zinc-950 text-2xl font-semibold font-['Serotiva'] capitalize leading-7">
+            <div className="self-stretch justify-start text-zinc-950 text-2xl font-semibold  capitalize leading-7">
               {title}
             </div>
             
