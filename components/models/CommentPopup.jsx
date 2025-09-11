@@ -46,14 +46,16 @@ const CommentPopup = ({ comments, onClose, onAddComment }) => {
                       suppressHydrationWarning
                     />
                   ) : (
-                    <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-600 text-xs font-medium" suppressHydrationWarning>
+                    <div className="w-8 h-8 bg-gray-300 flex items-center justify-center text-gray-600 text-xs font-medium" suppressHydrationWarning>
                       {comment.author.charAt(0).toUpperCase()}
                     </div>
                   )}
                 </div>
                 <div className="flex-1" suppressHydrationWarning>
                   <div className="flex items-center gap-2 mb-1" suppressHydrationWarning>
-                    <span className="font-medium text-sm text-gray-900" suppressHydrationWarning>{comment.author}</span>
+                    <span className="font-medium text-sm text-gray-900" suppressHydrationWarning>
+                      {comment.author === user.name || user.username ? "Your": comment.author }
+                    </span>
                     <span className="text-xs text-gray-500" suppressHydrationWarning>{formatTimeAgo(comment.timestamp)}</span>
                   </div>
                   <p className="text-sm text-gray-700" suppressHydrationWarning>{comment.text}</p>
@@ -78,7 +80,7 @@ const CommentPopup = ({ comments, onClose, onAddComment }) => {
                 suppressHydrationWarning
               />
             ) : (
-              <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-600 text-xs font-medium" suppressHydrationWarning>
+              <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xs font-medium" suppressHydrationWarning>
                 {user?.name?.charAt(0).toUpperCase()}
               </div>
             )}

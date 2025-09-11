@@ -128,7 +128,7 @@ const ReviewDetailsPage = () => {
       <div className="max-w-3xl mx-auto" suppressHydrationWarning>
         <div className="flex justify-between items-center mb-6" suppressHydrationWarning>
           <h1 className="text-2xl font-bold">Review Details</h1>
-          {user.id === review.artistId && (
+          {user?.id === review?.artistId && (
             <button 
               onClick={handleReport}
               className="text-sm text-gray-600 hover:text-red-500 flex items-center gap-1 px-3 py-1 border border-gray-200 rounded-lg hover:border-red-200 transition-colors"

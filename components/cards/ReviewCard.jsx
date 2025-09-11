@@ -179,9 +179,9 @@ const useComments = (reviewId) => {
       const formattedComments = response.comments?.map(comment => ({
         id: comment.id,
         text: comment.content,
-        author: comment.client?.name || comment.client?.username || 'Anonymous',
+        author: comment?.client?.name || comment?.client?.username || comment?.artist?.name || comment?.artist?.username || 'Anonymous',
         timestamp: comment.createdAt,
-        authorImage: comment.client?.profilePhoto
+        authorImage: comment?.client?.profilePhoto || comment?.artist?.profilePhoto
       })) || [];
       setCommentsList(formattedComments);
     } catch (err) {
@@ -202,7 +202,7 @@ const useComments = (reviewId) => {
           text: response.content,
           author: response.client?.name || response.client?.username || "You",
           timestamp: response.createdAt,
-          authorImage: response.client?.profilePhoto
+          authorImage: response.client?.profilePhoto || comment?.artist?.profilePhoto
         };
         setCommentsList(prev => [...prev, newComment]);
         setCommentText("");
@@ -257,7 +257,7 @@ const EngagementButtons = ({ engagement, onLike, onComment, onShare }) => {
     <div className="flex items-center justify-between" suppressHydrationWarning>
       <button
         onClick={onLike}
-        disabled={engagement.loading || !isAuthenticated || user.role === 'admin' || user.role === 'artist'}
+        disabled={engagement.loading || !isAuthenticated || user.role === 'admin'}
         className={`flex items-center cursor-pointer gap-2 px-3 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
           engagement.isLiked 
             ? 'text-red-500 bg-red-50 hover:bg-red-100' 
