@@ -178,7 +178,7 @@ export default function ReviewPage() {
           {/* Image */}
           <div className="w-full">
             <img
-              className="w-full h-48 sm:h-64 lg:h-96 object-cover rounded-lg"
+              className="w-full h-48 sm:h-64 lg:h-96 object-contain rounded-lg"
               // Correctly access the image URL from the photoUrls array
               src={`${backendUrl}${review.photoUrls[0]}` || "/assets/tattoing.jpg"}
               alt="Review Visual"

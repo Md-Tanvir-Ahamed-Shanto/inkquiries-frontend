@@ -187,7 +187,7 @@ export default function PromotionDetailsPage() {
                     <img 
                       src={promotion.artistImage} 
                       alt={promotion.artistName || "Artist"} 
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500">

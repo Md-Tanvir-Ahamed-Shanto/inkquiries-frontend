@@ -287,7 +287,7 @@ const ReportTable = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center gap-3">
                           <img
-                            className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
+                            className="w-8 h-8 rounded-full object-contain border-2 border-gray-200"
                             src={report?.profilePhoto || '/icon/user.svg'}
                             alt={report.reporter}
                           />
@@ -357,7 +357,7 @@ const ReportTable = () => {
                     
                     <div className="flex items-center gap-3">
                       <img
-                        className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
+                        className="w-8 h-8 rounded-full object-contain border-2 border-gray-200"
                         src="/assets/profile.png"
                         alt={report.reporter}
                       />

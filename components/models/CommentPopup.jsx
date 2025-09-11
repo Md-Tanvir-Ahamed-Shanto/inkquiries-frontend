@@ -42,7 +42,7 @@ const CommentPopup = ({ comments, onClose, onAddComment }) => {
                       src={`${backendUrl}${comment?.authorImage}`}
                       alt={comment.author}
                       fill
-                      className="object-cover"
+                      className="object-contain"
                       suppressHydrationWarning
                     />
                   ) : (
@@ -77,7 +77,7 @@ const CommentPopup = ({ comments, onClose, onAddComment }) => {
                 alt={user?.name}
                 width={40}
                 height={40}
-                className="object-cover w-8 h-8 rounded-full"
+                className="object-contain w-8 h-8 rounded-full"
                 suppressHydrationWarning
               />
             ) : (

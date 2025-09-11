@@ -135,7 +135,7 @@ function CreatePortfolio({ onClose, onSuccess }) {
                 <img
                   src={photo.preview}
                   alt={`Photo ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
                 <button
                   type="button"

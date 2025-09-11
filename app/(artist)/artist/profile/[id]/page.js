@@ -147,7 +147,7 @@ const ArtistProfileDetails = () => {
           alt="Profile"
           width={64}
           height={64}
-          className="object-cover rounded-full w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28"
+          className="object-contain rounded-full w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28"
         />
       ) : (
         <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -171,7 +171,7 @@ const ArtistProfileDetails = () => {
       </p>
       <div className="flex items-center justify-center sm:justify-start gap-2 sm:gap-3 mt-2 md:mt-[9px] flex-wrap">
         <p className="font-medium text-neutral-800 border-b leading-[100%] text-xs sm:text-sm md:text-base whitespace-nowrap">
-          Reviews {statistics.reviewCount || 0}
+         <div onClick={()=> setActiveTab("reviews")} className="cursor-pointer"> Reviews {statistics.reviewCount || 0}</div>
         </p>
         <div className="flex-shrink-0">
           <StarRating

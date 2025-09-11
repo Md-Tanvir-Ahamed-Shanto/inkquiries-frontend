@@ -48,7 +48,7 @@ function UploadPhoto({ onUpload, onClose }) {
           <img
             src={preview}
             alt="Uploaded"
-            className="absolute inset-0 w-full h-full object-cover rounded-[12px]"
+            className="absolute inset-0 w-full h-full object-contain rounded-[12px]"
           />
         ) : (
           <>

@@ -121,7 +121,7 @@ function Page() {
           <img
             src={client?.profilePhoto || "/assets/profile.png"}
             alt="User Avatar"
-            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover"
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-contain"
           />
           <div className="flex flex-col gap-1">
             <h3 className="text-lg sm:text-xl font-semibold text-neutral-800">

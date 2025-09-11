@@ -265,7 +265,7 @@ const Header = () => {
                         alt="User Avatar" 
                         width={32} 
                         height={32} 
-                        className="object-cover"
+                        className="object-contain"
                       />
                     ) : (
                       <User2Icon className="w-5 h-5 text-gray-500" />

@@ -139,7 +139,7 @@ const ReviewCard = ({ review, onUpdate, onDelete }) => {
                     key={photo.id}
                     src={photo.url}
                     alt="Review"
-                    className="rounded-lg object-cover w-full h-24"
+                    className="rounded-lg object-contain w-full h-24"
                   />
                 ))}
               </div>

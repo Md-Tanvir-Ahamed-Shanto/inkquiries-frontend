@@ -659,7 +659,7 @@ export default function CreateReviewPostPopup({ onClose, onSuccess }) {
                         <img
                           src={`${baseUrl}${artist.profilePhoto}`}
                           alt={artist.name || artist.user?.name}
-                          className="w-8 h-8 rounded-full mr-3 object-cover"
+                          className="w-8 h-8 rounded-full mr-3 object-contain"
                         />
                       ) : (
                         <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
@@ -700,7 +700,7 @@ export default function CreateReviewPostPopup({ onClose, onSuccess }) {
                     <img
                       src={selectedArtist.profileImage}
                       alt={selectedArtist.name || selectedArtist.user?.name}
-                      className="w-6 h-6 rounded-full mr-2 object-cover"
+                      className="w-6 h-6 rounded-full mr-2 object-contain"
                     />
                   ) : (
                     <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center mr-2">
@@ -791,7 +791,7 @@ export default function CreateReviewPostPopup({ onClose, onSuccess }) {
                   <img
                     src={URL.createObjectURL(file)}
                     alt={`Uploaded preview ${index + 1}`}
-                    className="w-full h-full object-cover rounded-xl"
+                    className="w-full h-full object-contain rounded-xl"
                   />
                   <button
                     type="button"

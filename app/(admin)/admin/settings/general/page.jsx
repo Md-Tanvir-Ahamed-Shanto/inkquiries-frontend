@@ -67,7 +67,7 @@ export default function GeneralSettingsPage() {
           {/* Profile Image */}
           <div className="w-10 h-10">
             <img
-              className="w-10 h-10 rounded-full object-cover"
+              className="w-10 h-10 rounded-full object-contain"
               src={profile.profilePhoto}
               alt="Admin profile"
             />

@@ -277,7 +277,7 @@ function Setting() {
              {
               profile.profilePhoto ? (
                 <img 
-                  className="rounded-full w-full h-full object-cover" 
+                  className="rounded-full w-full h-full object-contain" 
                   src={`${baseUrl}${profile.profilePhoto}`} 
                   alt="Profile" 
                 />

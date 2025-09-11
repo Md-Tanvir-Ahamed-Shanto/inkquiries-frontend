@@ -251,7 +251,7 @@ const SettingPage = ({onSubmit}) => {
               <div className="rounded-[10px] flex justify-start items-center gap-2">
                 <div className="w-16 h-16 relative">
                   <img
-                    className="w-16 h-16 left-0 top-0 absolute rounded-full object-cover"
+                    className="w-16 h-16 left-0 top-0 absolute rounded-full object-contain"
                     src={`${baseUrl}${profilePic}`}
                     alt="Profile"
                   />

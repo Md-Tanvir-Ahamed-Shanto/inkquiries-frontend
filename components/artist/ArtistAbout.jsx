@@ -100,7 +100,7 @@ function ArtistAbout({artistId}) {
                     : '/placeholder-image.svg'
                 }
               alt={`Gallery photo ${photo.id}`}
-              className="w-full h-full object-cover rounded-lg"
+              className="w-full h-full object-contain rounded-lg"
             />
           </div>
         ))}

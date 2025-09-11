@@ -3,11 +3,9 @@ import Image from "next/image";
 import { GoComment, GoDotFill, GoHeartFill } from "react-icons/go";
 import { AiOutlineSend } from "react-icons/ai";
 import { BiShare } from "react-icons/bi";
-import { CiFaceSmile } from "react-icons/ci";
-import { FaRegTrashAlt } from "react-icons/fa";
 import { FiEdit3, FiTrash2 } from "react-icons/fi";
-import PostActionBar from "../common/PostActionBar";
-import Modal from "../common/Modal";
+import heartIcon from "@/public/icon/heart.png";
+import commentIcon from "@/public/icon/comment.png";
 import {
   updatePortfolioItem,
   deletePortfolioItem,
@@ -303,7 +301,7 @@ console.log("Commentrs",comments)
               <img
                 src={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}${item.imageUrls[0]}`}
                 alt={`${item.title} - Main`}
-                className="w-full h-full object-cover rounded-xl"
+                className="w-full h-full object-contain rounded-xl"
               />
             </div>
             {item.imageUrls.slice(1).map((imageUrl, index) => (
@@ -311,7 +309,7 @@ console.log("Commentrs",comments)
                 <img
                   src={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}${imageUrl}`}
                   alt={`${item.title} - ${index + 2}`}
-                  className="w-full h-full object-cover rounded-xl"
+                  className="w-full h-full object-contain rounded-xl"
                 />
               </div>
             ))}
@@ -362,7 +360,16 @@ console.log("Commentrs",comments)
             {likeLoading ? (
               <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
             ) : (
-              <GoHeartFill className={isLiked ? 'text-red-500' : 'text-gray-400'} size={20} />
+               <Image
+              src={heartIcon}
+              height={20}
+              width={20}
+              alt="Heart Icon"
+              style={
+                  'brightness(0) saturate(100%) invert(13%) sepia(94%) saturate(7151%) hue-rotate(3deg) brightness(97%) contrast(118%)'
+              }
+              suppressHydrationWarning
+            />
             )}
             <span className="font-medium">{likesCount}</span>
           </button>
@@ -375,7 +382,14 @@ console.log("Commentrs",comments)
             }`}
             title={!isAuthenticated ? 'Please log in to comment on this portfolio item' : ''}
           >
-            <GoComment size={20} />
+            <Image
+          src={commentIcon}
+          width={20}
+          height={20}
+          className="w-5 h-5"
+          alt="Comment Icon"
+          suppressHydrationWarning
+        />
             <span className="font-medium">{comments.length}</span>
           </button>
           
@@ -404,7 +418,7 @@ console.log("Commentrs",comments)
                     alt="profile image"
                     width={40}
                     height={40}
-                    className="object-cover rounded-full"
+                    className="object-contain rounded-full"
                   />
                 </div>
                 {/* Comment Content */}

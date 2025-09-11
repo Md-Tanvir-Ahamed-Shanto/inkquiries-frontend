@@ -14,7 +14,7 @@ const ReviewImages = ({ images }) => {
           <img
             src={`${baseUrl}${images[0]}`}
             alt="Review image"
-            className="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform duration-200"
+            className="w-full h-64 object-contain rounded-xl hover:scale-105 transition-transform duration-200"
             suppressHydrationWarning
           />
         </div>
@@ -29,7 +29,7 @@ const ReviewImages = ({ images }) => {
               key={index}
               src={`${baseUrl}${image}`}
               alt={`Review image ${index + 1}`}
-              className="w-full h-48 object-cover hover:scale-105 transition-transform duration-200"
+              className="w-full h-48 object-contain hover:scale-105 transition-transform duration-200"
               suppressHydrationWarning
             />
           ))}
@@ -44,7 +44,7 @@ const ReviewImages = ({ images }) => {
             <img
               src={`${baseUrl}${images[0]}`}
               alt="Review image 1"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
+              className="w-full h-full object-contain hover:scale-105 transition-transform duration-200"
               style={{ minHeight: '200px' }}
               suppressHydrationWarning
             />
@@ -53,13 +53,13 @@ const ReviewImages = ({ images }) => {
             <img
               src={`${baseUrl}${images[1]}`}
               alt="Review image 2"
-              className="w-full h-24 object-cover hover:scale-105 transition-transform duration-200"
+              className="w-full h-24 object-contain hover:scale-105 transition-transform duration-200"
               suppressHydrationWarning
             />
             <img
               src={`${baseUrl}${images[2]}`}
               alt="Review image 3"
-              className="w-full h-24 object-cover hover:scale-105 transition-transform duration-200"
+              className="w-full h-24 object-contain hover:scale-105 transition-transform duration-200"
               suppressHydrationWarning
             />
           </div>
@@ -75,7 +75,7 @@ const ReviewImages = ({ images }) => {
             <img
               src={`${baseUrl}${image}`}
               alt={`Review image ${index + 1}`}
-              className="w-full h-32 object-cover hover:scale-105 transition-transform duration-200"
+              className="w-full h-32 object-contain hover:scale-105 transition-transform duration-200"
               suppressHydrationWarning
             />
             {imageCount > 4 && index === 3 && (

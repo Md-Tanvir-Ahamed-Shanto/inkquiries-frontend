@@ -16,7 +16,7 @@ const UserHeader = ({ userInfo, review }) => {
         <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-200" suppressHydrationWarning>
           {profilePicture ? (
             <img
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
               src={profilePicture}
               alt={name}
               suppressHydrationWarning
