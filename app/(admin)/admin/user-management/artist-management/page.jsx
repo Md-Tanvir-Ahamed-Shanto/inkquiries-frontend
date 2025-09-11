@@ -508,7 +508,7 @@ useEffect(() => {
 
                   {/* Action */}
                   <td className="w-[12%] min-w-[180px] h-16 px-3 py-6 bg-white flex items-center gap-3">
-                    <div 
+                    {/* <div 
                       className="text-gray-600 text-sm font-normal capitalize leading-none cursor-pointer flex items-center gap-1.5 hover:text-blue-600 transition-colors"
                       onClick={() => router.push(`/admin/user-management/artist-details/${artist.id}`)}
                     >
@@ -517,7 +517,7 @@ useEffect(() => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                       </svg>
                     
-                    </div>
+                    </div> */}
                     <div 
                        className={`${artist.isActive ? 'text-red-500' : 'text-green-500'} text-sm font-normal capitalize leading-none cursor-pointer flex items-center gap-1.5 hover:opacity-80 transition-colors`}
                        onClick={async () => {
@@ -610,7 +610,7 @@ useEffect(() => {
                 
                 {/* Actions */}
                 <div className="flex justify-between items-center p-3 bg-gray-50">
-                  <button 
+                  {/* <button 
                     className="text-blue-600 text-xs font-medium capitalize leading-none cursor-pointer flex items-center gap-1 hover:text-blue-700 transition-colors"
                     onClick={() => router.push(`/admin/user-management/artist-details/${artist.id}`)}
                   >
@@ -619,7 +619,7 @@ useEffect(() => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                    
-                  </button>
+                  </button> */}
                   
                   <button 
                     className={`${artist.isActive ? 'text-red-500 hover:text-red-600' : 'text-green-500 hover:text-green-600'} text-xs font-medium capitalize leading-none cursor-pointer flex items-center gap-1 transition-colors`}

@@ -19,6 +19,7 @@ const truncateContent = (content, maxLength = 50) => {
 
 const ReviewTable = () => {
   const [showFilter, setShowFilter] = useState(false);
+  const [showEntriesDropdown, setShowEntriesDropdown] = useState(false);
   const filterRef = useRef(null);
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -116,10 +117,15 @@ const ReviewTable = () => {
     setCurrentPage(1);
   }, [reviews, searchTerm, statusFilter, pageSize]);
 
+  // Click outside handler for dropdowns
+  const entriesRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (filterRef.current && !filterRef.current.contains(e.target)) {
         setShowFilter(false);
+      }
+      if (entriesRef.current && !entriesRef.current.contains(e.target)) {
+        setShowEntriesDropdown(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -572,27 +578,27 @@ const ReviewTable = () => {
                     filteredReviews.length
                   )} of ${filteredReviews.length} entries`}
             </div>
-            <div className="relative">
-              <button
-                onClick={() => setShowFilter((prev) => !prev)}
-                className="h-7 sm:h-8 p-2 sm:p-2.5 bg-white rounded-lg border border-gray-100 flex items-center gap-2.5"
-              >
-                <div className="text-neutral-900 text-xs font-medium">
-                  Show {pageSize}
-                </div>
-                <img
-                  src="/icon/right.svg"
-                  className="w-3 sm:w-4 h-3 sm:h-4 relative -rotate-90"
-                />
-              </button>
-              {showFilter && (
+            <div className="relative" ref={entriesRef}>
+                <button
+                  onClick={() => setShowEntriesDropdown((prev) => !prev)}
+                  className="h-7 sm:h-8 p-2 sm:p-2.5 bg-white rounded-lg border border-gray-100 flex items-center gap-2.5"
+                >
+                  <div className="text-neutral-900 text-xs font-medium">
+                    Show {pageSize}
+                  </div>
+                  <img
+                    src="/icon/right.svg"
+                    className="w-3 sm:w-4 h-3 sm:h-4 relative -rotate-90"
+                  />
+                </button>
+                {showEntriesDropdown && (
                 <div className="absolute right-0 mt-2 w-24 p-2 bg-white rounded-md shadow-lg border border-zinc-200 z-10">
                   {[8, 16, 24, 32].map((size) => (
                     <div
                       key={size}
                       onClick={() => {
                         setPageSize(size);
-                        setShowFilter(false);
+                        setShowEntriesDropdown(false);
                       }}
                       className="py-1 px-2 hover:bg-gray-100 cursor-pointer text-xs"
                     >

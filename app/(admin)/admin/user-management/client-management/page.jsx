@@ -154,7 +154,8 @@ export default function ClientTable() {
     return filteredClients.slice(startIndex, endIndex);
   };
 
-  const totalPages = Math.ceil(filteredClients.length / pagination.limit);
+  // Calculate total pages based on filtered clients
+  const totalPages = filteredClients.length > 0 ? Math.ceil(filteredClients.length / pagination.limit) : 0;
   const currentPageData = getCurrentPageData();
 
   return (
@@ -444,7 +445,7 @@ export default function ClientTable() {
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
+      {filteredClients.length > 0 && (
         <div className="w-full p-4 bg-white border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center justify-between w-full">
             {/* Previous/Next buttons and page info */}
