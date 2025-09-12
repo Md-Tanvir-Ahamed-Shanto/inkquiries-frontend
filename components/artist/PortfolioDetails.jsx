@@ -365,9 +365,9 @@ console.log("Commentrs",comments)
               height={20}
               width={20}
               alt="Heart Icon"
-              style={
-                  'brightness(0) saturate(100%) invert(13%) sepia(94%) saturate(7151%) hue-rotate(3deg) brightness(97%) contrast(118%)'
-              }
+              style={{
+                  filter: 'brightness(0) saturate(100%) invert(13%) sepia(94%) saturate(7151%) hue-rotate(3deg) brightness(97%) contrast(118%)'
+              }}
               suppressHydrationWarning
             />
             )}
