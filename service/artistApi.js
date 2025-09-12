@@ -9,9 +9,15 @@ export const getArtistDashboardStats = async () => {
   }
 };
 
-export const searchArtists = async (query) => {
+export const searchArtists = async (query, location, style) => {
   try {
-    const response = await apiFetch(`/api/artists/find/artist?q=${encodeURIComponent(query)}`, 'GET');
+    const params = new URLSearchParams();
+    if (query) params.append('q', query);
+    if (location && location !== 'None') params.append('location', location);
+    if (style && style !== 'None') params.append('style', style);
+    
+    const queryString = params.toString();
+    const response = await apiFetch(`/api/artists/find/artist?${queryString}`, 'GET');
     console.log('Search API Response:', response); // Debug log
     return response;
   } catch (error) {

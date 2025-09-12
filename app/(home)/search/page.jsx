@@ -25,26 +25,22 @@ const SearchContent = () => {
       try {
         setLoading(true);
         
-        // Construct search query
-        let searchQuery = query;
-        if (style && style !== "None") {
-          searchQuery = searchQuery ? `${searchQuery} ${style}` : style;
-        }
-        if (location && location !== "None") {
-          searchQuery = searchQuery ? `${searchQuery} ${location}` : location;
-        }
-
         // If no search parameters at all, return empty results
-        if (!searchQuery) {
+        if (!query && !style && !location) {
           setArtists([]);
           setLoading(false);
           return;
         }
         
-        console.log('Search query:', searchQuery);
+        console.log('Search parameters:', { query, style, location });
 
         try {
-            const response = await searchArtists(searchQuery);
+            // Pass separate parameters for query, location, and style
+            const response = await searchArtists(
+              query, 
+              location && location !== 'None' ? location : null, 
+              style && style !== 'None' ? style : null
+            );
 
             // Format the artists data
             console.log('API Response:', response); // Debug log
