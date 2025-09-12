@@ -2,11 +2,13 @@
 import React, { useState, useEffect } from "react";
 import PortfolioDetails from "./PortfolioDetails";
 import CardPortfolio from "../common/CardPortfolio";
-import { getArtistPortfolio, addPortfolioItem } from "../../service/portfolioApi";
+import { getArtistPortfolio, addPortfolioItem, deletePortfolioItem } from "../../service/portfolioApi";
+import { FiTrash2 } from "react-icons/fi";
 
 import Modal from "../common/Modal";
 import { MdOutlineFileUpload } from "react-icons/md";
 import PortfolioUploadForm from "./PortfolioUploadForm";
+import DeleteModal from "../common/DeleteModal";
 
 function Portfolio() {
   const [selectedCard, setSelectedCard] = useState(null);
@@ -14,6 +16,8 @@ function Portfolio() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [uploadModal, setUploadModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
   
   // Get user from localStorage safely
   const userString = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
@@ -46,6 +50,26 @@ function Portfolio() {
   const handleBackFromDetails = () => {
     setSelectedCard(null);
     fetchPortfolio(); // Refresh to get updated like counts
+  };
+
+  const handleDeleteClick = (e, item) => {
+    if (e) e.stopPropagation(); // Prevent triggering card click if event exists
+    setItemToDelete(item);
+    setDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!itemToDelete) return;
+    
+    try {
+      await deletePortfolioItem(itemToDelete.id);
+      fetchPortfolio(); // Refresh portfolio after deletion
+      setDeleteModal(false);
+      setItemToDelete(null);
+    } catch (err) {
+      console.error('Failed to delete portfolio item:', err);
+      setError(err.message || 'Failed to delete portfolio item');
+    }
   };
 
   if (loading) {
@@ -97,10 +121,12 @@ function Portfolio() {
               {portfolio.map((item, index) => (
                 <div 
                   key={item.id} 
-                  onClick={() => handleCardClick(index)}
-                  className="cursor-pointer transition-all duration-200 flex flex-col h-full"
+                  className="relative transition-all duration-200 flex flex-col h-full"
                 >
-                  <div className="h-full">
+                  <div 
+                    onClick={() => handleCardClick(index)}
+                    className="cursor-pointer h-full"
+                  >
                     <CardPortfolio
                       title={item.title}
                       style={item.style}
@@ -108,6 +134,8 @@ function Portfolio() {
                       description={item.description}
                       likesCount={item.likesCount || 0}
                       commentsCount={item.comments?.length || 0}
+                      isOwner={true}
+                      onDelete={(e) => handleDeleteClick(e, item)}
                     />
                   </div>
                 </div>
@@ -151,7 +179,7 @@ function Portfolio() {
         />
       )}
 
-      {/* Modal - Mobile Optimized */}
+      {/* Upload Modal - Mobile Optimized */}
       <Modal 
         isOpen={uploadModal} 
         onClose={() => setUploadModal(false)}
@@ -178,6 +206,26 @@ function Portfolio() {
             }}
           />
         </div>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={deleteModal}
+        onClose={() => {
+          setDeleteModal(false);
+          setItemToDelete(null);
+        }}
+        className="sm:max-w-md"
+      >
+        <DeleteModal
+          title="Delete Portfolio Item"
+          message={`Are you sure you want to delete "${itemToDelete?.title || ''}"? This action cannot be undone.`}
+          onClose={() => {
+            setDeleteModal(false);
+            setItemToDelete(null);
+          }}
+          onDelete={handleDeleteConfirm}
+        />
       </Modal>
     </>
   );
