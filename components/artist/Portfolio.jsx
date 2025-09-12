@@ -18,10 +18,10 @@ function Portfolio() {
   const [uploadModal, setUploadModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
-  
   // Get user from localStorage safely
   const userString = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
   const artistId = userString ? JSON.parse(userString)?.id : 'me';
+  const userId = userString ? JSON.parse(userString)?.id : null;
    const fetchPortfolio = async (isInitialLoad = false) => {
       try {
         // Only set loading to true for initial load
@@ -91,9 +91,7 @@ function Portfolio() {
         </div>
       </div>
     );
-  }
-
-  console.log("portfolio", portfolio);
+  } 
 
   return (
     <>
@@ -134,7 +132,8 @@ function Portfolio() {
                       description={item.description}
                       likesCount={item.likesCount || 0}
                       commentsCount={item.comments?.length || 0}
-                      isOwner={true}
+                      artistId={item?.artistId}
+                      userId={userId}
                       onDelete={(e) => handleDeleteClick(e, item)}
                     />
                   </div>
