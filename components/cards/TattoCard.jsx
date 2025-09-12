@@ -7,7 +7,7 @@ const TattoCard = ({ tatto }) => {
       <img
         src={tatto.imageUrl}
         alt={tatto.title}
-        className="absolute inset-0 w-96 h-[30rem] object-cover blur-2xl scale-110"
+        className="absolute inset-0 w-full h-full object-cover blur-2xl scale-110"
       />
 
       {/* Main image */}
@@ -27,3 +27,4 @@ const TattoCard = ({ tatto }) => {
   );
 };
 
+export default TattoCard
