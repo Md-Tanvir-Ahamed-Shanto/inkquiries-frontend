@@ -52,7 +52,10 @@ const ReviewTable = () => {
       setLoading(true);
       const response = await getAllReviews({
         limit: 100, // Get more reviews at once for client-side filtering
-        status: null, // Get all statuses
+        status: null,
+        includeRestricted: 'true', // Get all statuses
+        page: currentPage,
+        limit: pageSize,
       });
 
       // Transform API response to match the component's expected structure

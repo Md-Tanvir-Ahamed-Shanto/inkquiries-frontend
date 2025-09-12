@@ -1,10 +1,19 @@
-"use client"
+"use client";
 import React, { useEffect, useRef, useState } from "react";
-import { getAllClients, updateClientStatus, deleteClient } from "../../../../../service/adminApi";
+import {
+  getAllClients,
+  updateClientStatus,
+  deleteClient,
+} from "../../../../../service/adminApi";
 import { format } from "date-fns";
 import backendUrl from "@/utils/baseUrl";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { Delete, DeleteIcon } from "lucide-react";
+import { FaCheckCircle } from "react-icons/fa";
+import { FaBan } from "react-icons/fa6";
+import { FiDelete } from "react-icons/fi";
+import { MdDelete } from "react-icons/md";
 
 // Placeholder data for initial loading state
 const placeholderClients = [
@@ -14,7 +23,7 @@ const placeholderClients = [
     email: "arsalan@gmail.com",
     isActive: true,
     createdAt: "2022-06-15T00:00:00Z",
-    profilePhoto: "/default-avatar.jpg"
+    profilePhoto: "/default-avatar.jpg",
   },
   {
     id: 2,
@@ -22,8 +31,8 @@ const placeholderClients = [
     email: "wade@gmail.com",
     isActive: false,
     createdAt: "2022-06-15T00:00:00Z",
-    profilePhoto: "/default-avatar.jpg"
-  }
+    profilePhoto: "/default-avatar.jpg",
+  },
 ];
 
 export default function ClientTable() {
@@ -41,70 +50,72 @@ export default function ClientTable() {
     total: 0,
     page: 1,
     limit: 10,
-    pages: 0
+    pages: 0,
   });
   const [status, setStatus] = useState("");
   const [isFiltering, setIsFiltering] = useState(false);
-  
+
   const fetchClients = async () => {
     try {
       setLoading(true);
       const params = {
-        limit: 1000 // Get all clients in one request
+        limit: 1000, // Get all clients in one request
       };
-      
+
       const response = await getAllClients(params);
       setClients(response.clients);
       setFilteredClients(response.clients);
-      setPagination(prev => ({
+      setPagination((prev) => ({
         ...prev,
         total: response.pagination.total,
-        pages: Math.ceil(response.pagination.total / prev.limit)
+        pages: Math.ceil(response.pagination.total / prev.limit),
       }));
     } catch (error) {
       console.error("Error fetching clients:", error);
       setClients(placeholderClients);
       setFilteredClients(placeholderClients);
-      setPagination(prev => ({
+      setPagination((prev) => ({
         ...prev,
         total: placeholderClients.length,
-        pages: Math.ceil(placeholderClients.length / prev.limit)
+        pages: Math.ceil(placeholderClients.length / prev.limit),
       }));
     } finally {
       setLoading(false);
     }
   };
-    
+
   // Fetch clients data on component mount
   useEffect(() => {
     fetchClients();
   }, []);
-  
+
   // Combined filter effect for search and status
   useEffect(() => {
     setIsFiltering(true);
-    const filtered = clients.filter(client => {
-      const matchesSearch = searchTerm === "" || 
+    const filtered = clients.filter((client) => {
+      const matchesSearch =
+        searchTerm === "" ||
         client.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         client.email?.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesStatus = status === "" || 
+
+      const matchesStatus =
+        status === "" ||
         (status === "Active" && client.isActive === true) ||
         (status === "Inactive" && client.isActive === false);
-      
+
       return matchesSearch && matchesStatus;
     });
-    
+
     setFilteredClients(filtered);
-    setPagination(prev => ({ 
-      ...prev, 
+    setPagination((prev) => ({
+      ...prev,
       page: 1,
       total: filtered.length,
-      pages: Math.ceil(filtered.length / prev.limit)
+      pages: Math.ceil(filtered.length / prev.limit),
     }));
     setIsFiltering(false);
   }, [status, searchTerm, clients]);
-  
+
   const handleFilterSelect = (value) => {
     setSelectedFilter(value);
     setIsFiltering(true);
@@ -117,22 +128,25 @@ export default function ClientTable() {
     }
     setShowFilter(false);
   };
-  
+
   const handlePageChange = (page) => {
-    if (page >= 1 && page <= Math.ceil(filteredClients.length / pagination.limit)) {
-      setPagination(prev => ({ ...prev, page }));
+    if (
+      page >= 1 &&
+      page <= Math.ceil(filteredClients.length / pagination.limit)
+    ) {
+      setPagination((prev) => ({ ...prev, page }));
     }
   };
-  
+
   const handleLimitChange = (limit) => {
-    setPagination(prev => ({ 
-      ...prev, 
-      limit, 
+    setPagination((prev) => ({
+      ...prev,
+      limit,
       page: 1,
-      pages: Math.ceil(filteredClients.length / limit)
+      pages: Math.ceil(filteredClients.length / limit),
     }));
   };
-  
+
   // Click outside handlers
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -155,7 +169,10 @@ export default function ClientTable() {
   };
 
   // Calculate total pages based on filtered clients
-  const totalPages = filteredClients.length > 0 ? Math.ceil(filteredClients.length / pagination.limit) : 0;
+  const totalPages =
+    filteredClients.length > 0
+      ? Math.ceil(filteredClients.length / pagination.limit)
+      : 0;
   const currentPageData = getCurrentPageData();
 
   return (
@@ -184,7 +201,7 @@ export default function ClientTable() {
               </button>
             )}
           </div>
-          
+
           {/* Filter Dropdown */}
           <div className="relative w-full sm:w-auto" ref={filterRef}>
             <div
@@ -194,13 +211,20 @@ export default function ClientTable() {
               <div className="text-neutral-600 text-sm sm:text-base font-normal capitalize leading-tight">
                 {selectedFilter || "Filter"}
               </div>
-              <svg 
-                className={`w-4 h-4 transition-transform ${showFilter ? 'rotate-180' : ''}`}
-                fill="none" 
-                stroke="currentColor" 
+              <svg
+                className={`w-4 h-4 transition-transform ${
+                  showFilter ? "rotate-180" : ""
+                }`}
+                fill="none"
+                stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </div>
 
@@ -278,10 +302,14 @@ export default function ClientTable() {
                     <div className="flex items-center">
                       <img
                         className="h-8 w-8 rounded-full"
-                        src={client.profilePhoto ? `${backendUrl}${client.profilePhoto}` : '/default-avatar.jpg'}
+                        src={
+                          client.profilePhoto
+                            ? `${backendUrl}${client.profilePhoto}`
+                            : "/default-avatar.jpg"
+                        }
                         alt={client.name}
                         onError={(e) => {
-                          e.target.src = '/default-avatar.jpg';
+                          e.target.src = "/default-avatar.jpg";
                         }}
                       />
                       <div className="ml-3">
@@ -306,45 +334,92 @@ export default function ClientTable() {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {client.createdAt ? format(new Date(client.createdAt), 'dd MMM yyyy') : 'N/A'}
+                    {client.createdAt
+                      ? format(new Date(client.createdAt), "dd MMM yyyy")
+                      : "N/A"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-3">
-                      <button
-                        onClick={async () => {
-                          try {
-                            const status = client.isActive ? 'restricted' : 'active';
-                            await updateClientStatus(client.id, status);
-                            toast.success(`Client ${status === 'active' ? 'activated' : 'deactivated'} successfully`);
-                            fetchClients();
-                          } catch (error) {
-                            console.error('Error updating client status:', error);
-                            toast.error('Failed to update client status');
-                          }
-                        }}
-                        className={`${
-                          client.isActive ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'
-                        } transition-colors`}
-                      >
-                        {client.isActive ? 'Deactivate' : 'Activate'}
-                      </button>
-                      <button
-                        onClick={async () => {
-                          if (window.confirm('Are you sure you want to delete this client? This action cannot be undone.')) {
-                            try {
-                              await deleteClient(client.id);
-                              toast.success('Client deleted successfully');
-                              fetchClients();
-                            } catch (error) {
-                              console.error('Error deleting client:', error);
-                              toast.error('Failed to delete client');
-                            }
-                          }
-                        }}
-                        className="text-red-600 hover:text-red-900 transition-colors"
-                      >
-                        Delete
-                      </button>
+                     <div
+                  className="text-gray-600 text-sm font-normal capitalize leading-none cursor-pointer flex items-center gap-1.5 hover:text-blue-600 transition-colors"
+                  onClick={() => router.push(`/client/profile/${client.id}`)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                </div>
+                <button
+                  onClick={async () => {
+                    try {
+                      const status = client.isActive ? "restricted" : "active";
+                      await updateClientStatus(client.id, status);
+                      toast.success(
+                        `Client ${
+                          status === "active" ? "activated" : "deactivated"
+                        } successfully`
+                      );
+                      fetchClients();
+                    } catch (error) {
+                      console.error("Error updating client status:", error);
+                      toast.error("Failed to update client status");
+                    }
+                  }}
+                  className={`text-sm cursor-pointer ${
+                    client.isActive
+                      ? "text-red-600 hover:text-red-900"
+                      : "text-green-600 hover:text-green-900"
+                  } transition-colors`}
+                  aria-label={
+                    client.isActive ? "Deactivate Client" : "Activate Client"
+                  }
+                >
+                  {/* Conditionally render the icon based on client status */}
+                  {client.isActive ? (
+                    <FaBan className="h-4 w-4" />
+                  ) : (
+                    <FaCheckCircle className="h-4 w-4" />
+                  )}
+                </button>
+                <div
+                  onClick={async () => {
+                    if (
+                      window.confirm(
+                        "Are you sure you want to delete this client? This action cannot be undone."
+                      )
+                    ) {
+                      try {
+                        await deleteClient(client.id);
+                        toast.success("Client deleted successfully");
+                        fetchClients();
+                      } catch (error) {
+                        console.error("Error deleting client:", error);
+                        toast.error("Failed to delete client");
+                      }
+                    }
+                  }}
+                  className="text-sm text-red-600 cursor-pointer hover:text-red-900 transition-colors"
+                >
+                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                </div>
                     </div>
                   </td>
                 </tr>
@@ -361,20 +436,25 @@ export default function ClientTable() {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
           </div>
         ) : currentPageData.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            No clients found
-          </div>
+          <div className="text-center py-8 text-gray-500">No clients found</div>
         ) : (
           currentPageData.map((client) => (
-            <div key={client.id} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+            <div
+              key={client.id}
+              className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
+            >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-3">
                   <img
                     className="h-10 w-10 rounded-full"
-                    src={client.profilePhoto ? `${backendUrl}${client.profilePhoto}` : '/default-avatar.jpg'}
+                    src={
+                      client.profilePhoto
+                        ? `${backendUrl}${client.profilePhoto}`
+                        : "/default-avatar.jpg"
+                    }
                     alt={client.name}
                     onError={(e) => {
-                      e.target.src = '/default-avatar.jpg';
+                      e.target.src = "/default-avatar.jpg";
                     }}
                   />
                   <div>
@@ -394,49 +474,94 @@ export default function ClientTable() {
                   {client.isActive ? "Active" : "Inactive"}
                 </span>
               </div>
-              
+
               <div className="mb-3">
                 <div className="text-xs text-gray-500 mb-1">Joined</div>
                 <div className="text-sm text-gray-900">
-                  {client.createdAt ? format(new Date(client.createdAt), 'dd MMM yyyy') : 'N/A'}
+                  {client.createdAt
+                    ? format(new Date(client.createdAt), "dd MMM yyyy")
+                    : "N/A"}
                 </div>
               </div>
 
               <div className="flex justify-end space-x-3 pt-3 border-t border-gray-100">
+                <div
+                  className="text-gray-600 text-sm font-normal capitalize leading-none cursor-pointer flex items-center gap-1.5 hover:text-blue-600 transition-colors"
+                  onClick={() => router.push(`/client/profile/${client.id}`)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                </div>
                 <button
                   onClick={async () => {
                     try {
-                      const status = client.isActive ? 'restricted' : 'active';
+                      const status = client.isActive ? "restricted" : "active";
                       await updateClientStatus(client.id, status);
-                      toast.success(`Client ${status === 'active' ? 'activated' : 'deactivated'} successfully`);
+                      toast.success(
+                        `Client ${
+                          status === "active" ? "activated" : "deactivated"
+                        } successfully`
+                      );
                       fetchClients();
                     } catch (error) {
-                      console.error('Error updating client status:', error);
-                      toast.error('Failed to update client status');
+                      console.error("Error updating client status:", error);
+                      toast.error("Failed to update client status");
                     }
                   }}
                   className={`text-sm ${
-                    client.isActive ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'
+                    client.isActive
+                      ? "text-red-600 hover:text-red-900"
+                      : "text-green-600 hover:text-green-900"
                   } transition-colors`}
+                  aria-label={
+                    client.isActive ? "Deactivate Client" : "Activate Client"
+                  }
                 >
-                  {client.isActive ? 'Deactivate' : 'Activate'}
+                  {/* Conditionally render the icon based on client status */}
+                  {client.isActive ? (
+                    <FaBan className="h-4 w-4" />
+                  ) : (
+                    <FaCheckCircle className="h-4 w-4" />
+                  )}
                 </button>
                 <button
                   onClick={async () => {
-                    if (window.confirm('Are you sure you want to delete this client? This action cannot be undone.')) {
+                    if (
+                      window.confirm(
+                        "Are you sure you want to delete this client? This action cannot be undone."
+                      )
+                    ) {
                       try {
                         await deleteClient(client.id);
-                        toast.success('Client deleted successfully');
+                        toast.success("Client deleted successfully");
                         fetchClients();
                       } catch (error) {
-                        console.error('Error deleting client:', error);
-                        toast.error('Failed to delete client');
+                        console.error("Error deleting client:", error);
+                        toast.error("Failed to delete client");
                       }
                     }
                   }}
                   className="text-sm text-red-600 hover:text-red-900 transition-colors"
                 >
-                  Delete
+                  <DeleteIcon />
                 </button>
               </div>
             </div>
@@ -450,61 +575,76 @@ export default function ClientTable() {
           <div className="flex items-center justify-between w-full">
             {/* Previous/Next buttons and page info */}
             <div className="flex items-center space-x-2">
-              <button 
+              <button
                 onClick={() => handlePageChange(pagination.page - 1)}
                 disabled={pagination.page <= 1}
                 className={`px-3 py-2 text-sm border border-gray-300 rounded-md ${
-                  pagination.page <= 1 
-                    ? 'opacity-50 cursor-not-allowed bg-gray-100' 
-                    : 'bg-white hover:bg-gray-50 cursor-pointer'
+                  pagination.page <= 1
+                    ? "opacity-50 cursor-not-allowed bg-gray-100"
+                    : "bg-white hover:bg-gray-50 cursor-pointer"
                 }`}
               >
                 Previous
               </button>
-              
+
               <span className="text-sm text-gray-700">
                 Page {pagination.page} of {totalPages}
               </span>
-              
-              <button 
+
+              <button
                 onClick={() => handlePageChange(pagination.page + 1)}
                 disabled={pagination.page >= totalPages}
                 className={`px-3 py-2 text-sm border border-gray-300 rounded-md ${
-                  pagination.page >= totalPages 
-                    ? 'opacity-50 cursor-not-allowed bg-gray-100' 
-                    : 'bg-white hover:bg-gray-50 cursor-pointer'
+                  pagination.page >= totalPages
+                    ? "opacity-50 cursor-not-allowed bg-gray-100"
+                    : "bg-white hover:bg-gray-50 cursor-pointer"
                 }`}
               >
                 Next
               </button>
             </div>
-            
+
             {/* Entries info and selector */}
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-700">
-                {filteredClients.length > 0 ? (
-                  `Showing ${((pagination.page - 1) * pagination.limit) + 1} to ${Math.min(pagination.page * pagination.limit, filteredClients.length)} of ${filteredClients.length} entries`
-                ) : (
-                  "No entries to show"
-                )}
+                {filteredClients.length > 0
+                  ? `Showing ${
+                      (pagination.page - 1) * pagination.limit + 1
+                    } to ${Math.min(
+                      pagination.page * pagination.limit,
+                      filteredClients.length
+                    )} of ${filteredClients.length} entries`
+                  : "No entries to show"}
               </div>
-              
+
               <div className="relative" ref={entriesRef}>
-                <button 
-                  onClick={() => setShowEntriesDropdown(prev => !prev)}
+                <button
+                  onClick={() => setShowEntriesDropdown((prev) => !prev)}
                   className="px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 flex items-center space-x-1"
                 >
                   <span>Show {pagination.limit}</span>
-                  <svg className={`w-4 h-4 transition-transform ${showEntriesDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <svg
+                    className={`w-4 h-4 transition-transform ${
+                      showEntriesDropdown ? "rotate-180" : ""
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </button>
-                
+
                 {showEntriesDropdown && (
                   <div className="absolute right-0 mt-1 w-24 bg-white rounded-md shadow-lg border border-gray-200 z-10">
-                    {[10, 25, 50, 100].map(limit => (
-                      <button 
-                        key={limit} 
+                    {[10, 25, 50, 100].map((limit) => (
+                      <button
+                        key={limit}
                         onClick={() => {
                           handleLimitChange(limit);
                           setShowEntriesDropdown(false);
@@ -523,4 +663,4 @@ export default function ClientTable() {
       )}
     </div>
   );
-};
+}

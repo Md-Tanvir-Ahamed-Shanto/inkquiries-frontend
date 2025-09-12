@@ -236,7 +236,7 @@ const Header = () => {
                     
                     {notifications.length > 0 && (
                       <div className="px-4 py-2 border-t border-gray-100">
-                        <Link href={user?.role === 'admin' ? '/admin/notifications' : 
+                        <Link href={user?.role === 'admin' ? '/admin/overview' : 
                                     user?.role === 'artist' ? '/artist/dashboard?tab=notification' : 
                                     '/client/dashboard?tab=notification'}
                         >
