@@ -20,6 +20,7 @@ function Portfolio() {
   const artistId = userString ? JSON.parse(userString)?.id : 'me';
    const fetchPortfolio = async () => {
       try {
+        setLoading(true);
         const data = await getArtistPortfolio(artistId);
         setPortfolio(data);
         setLoading(false);
@@ -178,7 +179,10 @@ function Portfolio() {
           </div>
           <PortfolioUploadForm
             fetchPortfolio={fetchPortfolio}
-            onClose={() => setUploadModal(false)}
+            onClose={() => {
+              fetchPortfolio(); // Ensure portfolio is refreshed when modal is closed
+              setUploadModal(false);
+            }}
           />
         </div>
       </Modal>

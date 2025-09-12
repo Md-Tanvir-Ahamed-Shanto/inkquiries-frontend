@@ -49,17 +49,14 @@ function PortfolioUploadForm({ fetchPortfolio, onClose }) {
       files.forEach((file) => {
         formDataToSend.append("portfolioImages", file);
       });
-      for (let pair of formDataToSend.entries()) {
-        console.log(pair[0] + ": " + pair[1]);
-      }
+      
       const response = await addPortfolioItem(formDataToSend);
-      fetchPortfolio();
+      // Fetch portfolio data after successful upload
+      await fetchPortfolio();
       onClose();
     } catch (err) {
-      fetchPortfolio();
       setError(err.message || "Failed to upload portfolio item");
     } finally {
-      fetchPortfolio();
       setLoading(false);
     }
   };
