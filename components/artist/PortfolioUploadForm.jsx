@@ -52,7 +52,7 @@ function PortfolioUploadForm({ fetchPortfolio, onClose }) {
       
       const response = await addPortfolioItem(formDataToSend);
       // Fetch portfolio data after successful upload
-      await fetchPortfolio();
+      fetchPortfolio();
       onClose();
     } catch (err) {
       setError(err.message || "Failed to upload portfolio item");

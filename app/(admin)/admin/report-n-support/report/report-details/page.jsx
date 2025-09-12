@@ -1,11 +1,12 @@
 "use client";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { updateReportStatus } from "@/service/adminApi";
 import { acceptReviewReport, rejectReviewReport, getReviewReportById } from "@/service/reviewApi";
 
-function Page() {
+// Report details content component that uses useSearchParams
+function ReportDetailsContent() {
   const searchParams = useSearchParams();
   const reportId = searchParams.get("id");
   
@@ -219,6 +220,17 @@ function Page() {
         </div>
       </div>
     </>
+  );
+}
+
+// Main page component with Suspense boundary
+function Page() {
+  return (
+    <Suspense fallback={<div className="w-full flex justify-center items-center p-4">
+      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div>
+    </div>}>
+      <ReportDetailsContent />
+    </Suspense>
   );
 }
 

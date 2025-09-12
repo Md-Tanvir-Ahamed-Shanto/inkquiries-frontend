@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { GoDotFill } from "react-icons/go";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { FiEdit3 } from "react-icons/fi";
 import { useSearchParams, useRouter } from "next/navigation";
 import Reviews from "@/components/artist/Reviews";
@@ -17,7 +17,8 @@ import StarRating from "@/components/common/StarRating";
 import backendUrl from "@/utils/baseUrl";
 import Link from "next/link";
 
-const Page = () => {
+// Dashboard content component that uses useSearchParams
+const DashboardContent = () => {
   const [user, setUser] = useState(null);
   const [artistId, setArtistId] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -241,6 +242,17 @@ console.log("profile data",profile)
         />
       </Modal>
     </div>
+  );
+};
+
+// Main Page component with Suspense boundary
+const Page = () => {
+  return (
+    <Suspense fallback={<div className="w-full flex justify-center items-center p-4 md:px-28">
+      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div>
+    </div>}>
+      <DashboardContent />
+    </Suspense>
   );
 };
 

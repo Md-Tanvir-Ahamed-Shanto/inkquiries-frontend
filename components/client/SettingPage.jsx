@@ -33,7 +33,7 @@ const SettingPage = ({onSubmit}) => {
   const [photoLoading, setPhotoLoading] = useState(false);
 
    const userData = JSON.parse(localStorage.getItem("user"));
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.inkquiries.org"
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
 
      const fetchProfile = async () => {
       try {

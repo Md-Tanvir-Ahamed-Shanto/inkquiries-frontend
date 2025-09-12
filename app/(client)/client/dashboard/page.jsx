@@ -6,11 +6,12 @@ import SettingPage from "@/components/client/SettingPage";
 import CreateReviewPostPopup from "@/components/models/CreateReviewPostPopup";
 import { getClientProfile, getClientReviews } from "@/service/clientApi";
 import backendUrl from "@/utils/baseUrl";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-const ClientDashboard = () => {
+// Dashboard content component that uses useSearchParams
+const DashboardContent = () => {
   // Get URL query parameters
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -193,6 +194,17 @@ const ClientDashboard = () => {
         />
       )}
     </div>
+  );
+};
+
+// Main ClientDashboard component with Suspense boundary
+const ClientDashboard = () => {
+  return (
+    <Suspense fallback={<div className="w-full flex justify-center items-center p-4 md:px-28">
+      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div>
+    </div>}>
+      <DashboardContent />
+    </Suspense>
   );
 };
 

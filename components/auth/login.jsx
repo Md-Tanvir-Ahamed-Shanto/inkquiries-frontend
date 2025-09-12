@@ -73,7 +73,7 @@ const LoginPage = () => {
 
   const handleSocialLogin = (provider) => {
     // Redirect to OAuth provider with role parameter
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.inkquiries.org';
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
     const role = activeUserType.toLowerCase();
     window.location.href = `${backendUrl}/auth/${provider}?role=${role}`;
   };

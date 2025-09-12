@@ -18,40 +18,34 @@ function Portfolio() {
   // Get user from localStorage safely
   const userString = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
   const artistId = userString ? JSON.parse(userString)?.id : 'me';
-   const fetchPortfolio = async () => {
+   const fetchPortfolio = async (isInitialLoad = false) => {
       try {
-        setLoading(true);
+        // Only set loading to true for initial load
+        if (isInitialLoad) setLoading(true);
+        
         const data = await getArtistPortfolio(artistId);
         setPortfolio(data);
-        setLoading(false);
+        
+        if (isInitialLoad) setLoading(false);
       } catch (err) {
         setError(err.message);
-        setLoading(false);
+        if (isInitialLoad) setLoading(false);
       }
     };
 
   useEffect(() => {
-   
-
-    fetchPortfolio();
+    if (artistId) {
+      fetchPortfolio(true); // Initial load
+    }
   }, [artistId]);
 
   const handleCardClick = (index) => {
     setSelectedCard(index);
   };
 
-  const refreshPortfolio = async () => {
-    try {
-      const data = await getArtistPortfolio(artistId);
-      setPortfolio(data);
-    } catch (err) {
-      console.error('Failed to refresh portfolio:', err);
-    }
-  };
-
   const handleBackFromDetails = () => {
     setSelectedCard(null);
-    refreshPortfolio(); // Refresh to get updated like counts
+    fetchPortfolio(); // Refresh to get updated like counts
   };
 
   if (loading) {
@@ -180,7 +174,6 @@ function Portfolio() {
           <PortfolioUploadForm
             fetchPortfolio={fetchPortfolio}
             onClose={() => {
-              fetchPortfolio(); // Ensure portfolio is refreshed when modal is closed
               setUploadModal(false);
             }}
           />

@@ -2,12 +2,13 @@
 import Modal from "@/components/common/Modal";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { getArtistById, updateArtistStatus, deleteArtist, getArtistSubscriptions } from "../../../../../../service/adminApi";
 import RestrictUserModal from "../RestrictUserModal";
 import DeleteUserModal from "../DeleteUserModal";
 
-function Page() {
+// Artist details content component that uses useSearchParams
+function ArtistDetailsContent() {
   const searchParams = useSearchParams();
   const artistId = searchParams.get("id");
   
@@ -466,5 +467,16 @@ const ArtistInfo = ({ label, value }) => (
     </div>
   </div>
 );
+
+// Main page component with Suspense boundary
+function Page() {
+  return (
+    <Suspense fallback={<div className="w-full flex justify-center items-center p-4">
+      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-zinc-800"></div>
+    </div>}>
+      <ArtistDetailsContent />
+    </Suspense>
+  );
+}
 
 export default Page;

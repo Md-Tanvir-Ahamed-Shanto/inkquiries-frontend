@@ -204,7 +204,7 @@ const Registration = () => {
   const handleSocialLogin = (provider) => {
     // The social login flow is a redirect.
     // The backend handles the OAuth process and redirects back to the frontend with a token.
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.inkquiries.org';
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
     const role = activeUserType.toLowerCase();
     window.location.href = `${backendUrl}/auth/${provider}?role=${role}`;
   };
