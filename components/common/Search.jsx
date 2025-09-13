@@ -24,7 +24,7 @@ export default function Search() {
 
   const SearchIcon = () => (
     <svg
-      className="w-6 h-6 text-white"
+      className="w-6 h-6 cursor-pointer text-white"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
@@ -48,7 +48,7 @@ export default function Search() {
             <select
               value={style}
               onChange={(e) => setStyle(e.target.value)}
-              className="appearance-none w-full bg-transparent border border-gray-300 md:border-none rounded-full py-3 pl-4 pr-10 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="appearance-none w-full bg-transparent border border-gray-300 md:border-none rounded-full py-3 pl-4 pr-10 text-gray-700 hover:cursor-pointer leading-tight focus:outline-none focus:ring-2 focus:ring-gray-500"
             >
               <option value="None">Select Style</option>
               <option value="Traditional Style">Traditional Style</option>
@@ -66,7 +66,7 @@ export default function Search() {
             <select
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                className="appearance-none w-full bg-transparent border border-gray-300 md:border-none rounded-full py-3 pl-4 pr-10 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-gray-500"
+                className="appearance-none w-full bg-transparent border border-gray-300 md:border-none rounded-full py-3 pl-4 pr-10 text-gray-700 hover:cursor-pointer leading-tight focus:outline-none focus:ring-2 focus:ring-gray-500"
               >
                 <option value="None">Select City</option>
                 <option value="Salt Lake City">Salt Lake City</option>
@@ -75,7 +75,7 @@ export default function Search() {
                 <option value="Chicago">Chicago</option>
                 <option value="Miami">Miami</option>
               </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3">
+            <div className="pointer-events-none cursor-pointer absolute inset-y-0 right-0 flex items-center px-3">
               <ChevronDownIcon />
             </div>
           </div>

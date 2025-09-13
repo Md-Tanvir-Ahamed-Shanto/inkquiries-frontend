@@ -68,7 +68,7 @@ const ForgotPasswordPage = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className={`self-stretch h-12 px-6 py-4 bg-zinc-950 rounded-lg inline-flex justify-center items-center gap-2.5 text-white text-base font-semibold font-['Inter'] leading-normal ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+              className={`self-stretch h-12 cursor-pointer px-6 py-4 bg-zinc-950 rounded-lg inline-flex justify-center items-center gap-2.5 text-white text-base font-semibold font-['Inter'] leading-normal ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
               {isLoading ? "Sending..." : "Send recovery link"}
             </button>

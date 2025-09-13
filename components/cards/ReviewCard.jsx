@@ -14,6 +14,8 @@ import UserHeader from "./UserHeader";
 import ReviewImages from "./ReviewImages";
 import ReviewContent from "./ReviewContent";
 import Link from "next/link";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 // Error Display Component
 const ErrorDisplay = ({ error, onRetry, className = "" }) => {
@@ -322,11 +324,11 @@ const EngagementButtons = ({ engagement, onLike, onComment, onShare }) => {
     <div className="flex items-center justify-between" suppressHydrationWarning>
       <button
         onClick={onLike}
-        disabled={engagement.loading || !isAuthenticated || user.role === 'admin'}
+        disabled={engagement.loading || user?.role === 'admin'}
         className={`flex items-center cursor-pointer gap-2 px-3 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
           engagement.isLiked 
             ? 'text-red-500 bg-red-50 hover:bg-red-100' 
-            : isAuthenticated 
+            : user?.role === 'admin' 
               ? 'text-gray-600 hover:bg-gray-50 hover:text-red-500'
               : 'text-gray-400 cursor-not-allowed'
         }`}
@@ -361,7 +363,6 @@ const EngagementButtons = ({ engagement, onLike, onComment, onShare }) => {
 
       <button
         onClick={onComment}
-        disabled={!isAuthenticated}
         className={`flex items-center gap-2 px-3 cursor-pointer py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
           isAuthenticated
             ? 'text-gray-600 hover:bg-gray-50 hover:text-gray-600'
@@ -409,11 +410,13 @@ const ReviewCard = ({ item, reviewId = item?.id, initialLikeStatus }) => {
   const engagement = useEngagement(item, reviewId, initialLikeStatus);
   const comments = useComments(reviewId);
   const [showReportModal, setShowReportModal] = useState(false);
+  const router = useRouter();
   
   const user = getCurrentUser();
   const handleLike = () => {
     if (!user) {
-      alert("Please log in to like reviews");
+      toast.info("Please log in to like reviews");
+      router.push("/login");
       return;
     }
     engagement.toggleLike();
@@ -422,8 +425,7 @@ const ReviewCard = ({ item, reviewId = item?.id, initialLikeStatus }) => {
   const handleComment = () => {
     const user = getCurrentUser();
     if (!user) {
-      alert("Please log in to comment on reviews");
-      return;
+      toast.info("Please log in to comment on reviews");
     }
     comments.openCommentPopup();
   };
@@ -448,6 +450,11 @@ const ReviewCard = ({ item, reviewId = item?.id, initialLikeStatus }) => {
   };
 
   const handleAddComment = async () => {
+    if (!user) {
+      toast.info("Please log in to comment on reviews");
+      router.push("/login")
+      return;
+    }
     const success = await comments.addComment();
     if (success) {
       engagement.incrementComments();

@@ -73,7 +73,7 @@ const LoginPage = () => {
 
   const handleSocialLogin = (provider) => {
     // Redirect to OAuth provider with role parameter
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.inkquiries.org';
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
     const role = activeUserType.toLowerCase();
     window.location.href = `${backendUrl}/auth/${provider}?role=${role}`;
   };
@@ -143,7 +143,7 @@ const LoginPage = () => {
 
             <button
               type="submit"
-              className="self-stretch h-12 px-6 py-4 bg-zinc-950 rounded-lg inline-flex justify-center items-center gap-2.5 text-white text-base font-semibold font-['Inter'] leading-normal"
+              className="self-stretch cursor-pointer h-12 px-6 py-4 bg-zinc-950 rounded-lg inline-flex justify-center items-center gap-2.5 text-white text-base font-semibold font-['Inter'] leading-normal"
               disabled={isLoading}
             >
               {isLoading ? "Logging in..." : "Login"}

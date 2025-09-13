@@ -2,7 +2,7 @@ import React from "react";
 
 const TattoCard = ({ tatto }) => {
   return (
-    <div className="w-full relative rounded-lg overflow-hidden max-w-sm mx-auto">
+    <div className="w-full hover:scale-105 hover:cursor-pointer relative rounded-lg overflow-hidden max-w-sm mx-auto">
       {/* Blurred background */}
       <img
         src={tatto.imageUrl}

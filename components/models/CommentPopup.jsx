@@ -99,7 +99,7 @@ const CommentPopup = ({ comments, onClose, onAddComment }) => {
               <button
                 onClick={onAddComment}
                 disabled={!comments.commentText.trim() || comments.loading}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg text-sm font-medium hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                className="px-4 py-2 bg-gray-500 cursor-pointer text-white rounded-lg text-sm font-medium hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
                 suppressHydrationWarning
               >
                 {comments.loading && (

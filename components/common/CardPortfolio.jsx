@@ -11,7 +11,7 @@ import placeHolderImage from "@/public/placeholder-image.svg";
 function CardPortfolio({ title, style, imageUrl, description,onDelete,userId = null, artistId }) {
   const baseUrl = backendUrl;
   return (
-    <div className="w-full max-w-3xl p-3 bg-white rounded-2xl outline outline-offset-[-1px] outline-zinc-200 flex flex-col justify-start items-start gap-4 relative">
+    <div className="w-full max-w-3xl p-3 bg-white rounded-2xl outline outline-offset-[-1px] outline-zinc-200 flex flex-col justify-start items-start gap-4 relative cursor-pointer">
       <div className="self-stretch flex flex-col justify-start items-start gap-6">
         <div className="self-stretch flex flex-col justify-start items-start gap-6">
           {/* Image Section */}

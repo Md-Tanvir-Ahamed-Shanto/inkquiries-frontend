@@ -130,7 +130,7 @@ const ArtistProfileDetails = () => {
               fetchReviews();
             }
           }}
-          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors cursor-pointer"
+          className="px-4 py-2 bg-gray-500  text-white rounded hover:bg-gray-600 transition-colors cursor-pointer"
         >
           Try Again
         </button>
@@ -208,7 +208,7 @@ const ArtistProfileDetails = () => {
               setSelectedPortfolioItem(null);
               router.push(`/artist/profile/${id}?tab=reviews`);
             }}
-            className={`text-sm md:text-xl font-semibold capitalize leading-[48px] transition-colors ${
+            className={`text-sm md:text-xl cursor-pointer font-semibold capitalize leading-[48px] transition-colors ${
               activeTab === 'reviews' 
                 ? 'text-zinc-950 border-b-2 border-zinc-950' 
                 : 'text-zinc-500 hover:text-zinc-700'
@@ -222,7 +222,7 @@ const ArtistProfileDetails = () => {
               setSelectedPortfolioItem(null);
               router.push(`/artist/profile/${id}?tab=portfolio`);
             }}
-            className={`text-sm md:text-xl font-semibold capitalize leading-[48px] transition-colors ${
+            className={`text-sm md:text-xl cursor-pointer font-semibold capitalize leading-[48px] transition-colors ${
               activeTab === 'portfolio' 
                 ? 'text-zinc-950 border-b-2 border-zinc-950' 
                 : 'text-zinc-500 hover:text-zinc-700'
@@ -236,7 +236,7 @@ const ArtistProfileDetails = () => {
               setSelectedPortfolioItem(null);
               router.push(`/artist/profile/${id}?tab=about`);
             }}
-            className={`text-sm md:text-xl font-semibold capitalize leading-[48px] transition-colors ${
+            className={`text-sm md:text-xl cursor-pointer font-semibold capitalize leading-[48px] transition-colors ${
               activeTab === 'about' 
                 ? 'text-zinc-950 border-b-2 border-zinc-950' 
                 : 'text-zinc-500 hover:text-zinc-700'

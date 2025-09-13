@@ -204,7 +204,7 @@ const Registration = () => {
   const handleSocialLogin = (provider) => {
     // The social login flow is a redirect.
     // The backend handles the OAuth process and redirects back to the frontend with a token.
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.inkquiries.org';
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
     const role = activeUserType.toLowerCase();
     window.location.href = `${backendUrl}/auth/${provider}?role=${role}`;
   };
@@ -226,7 +226,7 @@ const Registration = () => {
             <div className="flex gap-2">
               <button
                 type="button"
-                className={`flex-1 h-12 px-6 py-4 bg-slate-50 rounded-lg flex justify-center items-center gap-2.5 text-zinc-950 text-base font-semibold font-['Inter'] leading-normal ${
+                className={`flex-1 h-12 px-6 cursor-pointer py-4 bg-slate-50 rounded-lg flex justify-center items-center gap-2.5 text-zinc-950 text-base font-semibold font-['Inter'] leading-normal ${
                   activeUserType === "Client"
                     ? " outline-[1.50px] outline-offset-[-1.50px] outline-black"
                     : ""
@@ -237,7 +237,7 @@ const Registration = () => {
               </button>
               <button
                 type="button"
-                className={`flex-1 h-12 px-6 py-4 bg-slate-50 rounded-lg flex justify-center items-center gap-2.5 text-zinc-950 text-base font-semibold font-['Inter'] leading-normal ${
+                className={`flex-1 h-12 px-6 cursor-pointer py-4 bg-slate-50 rounded-lg flex justify-center items-center gap-2.5 text-zinc-950 text-base font-semibold font-['Inter'] leading-normal ${
                   activeUserType === "Artist"
                     ? " outline-[1.50px] outline-offset-[-1.50px] outline-black"
                     : ""
@@ -254,7 +254,7 @@ const Registration = () => {
             {formFields.map((field) => (
               <div
                 key={field.name}
-                className="self-stretch h-14 p-3.5 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-zinc-200 inline-flex justify-start items-center gap-5"
+                className="self-stretch h-14 p-3.5 bg-white rounded-lg outline-1 outline-offset-[-1px] outline-zinc-200 inline-flex justify-start items-center gap-5"
               >
                 <div className="w-4 h-4 relative flex items-center justify-center text-gray-950">
                   {field.icon}
@@ -280,7 +280,7 @@ const Registration = () => {
                   <button
                     type="button"
                     onClick={() => togglePasswordVisibility(field.name)}
-                    className="flex-shrink-0 text-zinc-500"
+                    className="flex-shrink-0 cursor-pointer text-zinc-500"
                   >
                     {(field.name === "password" && showPassword) ||
                     (field.name === "confirmPassword" &&
@@ -303,7 +303,7 @@ const Registration = () => {
             
             <button
               type="submit"
-              className="self-stretch h-12 px-6 py-4 bg-zinc-950 rounded-lg inline-flex justify-center items-center gap-2.5 text-white text-base font-semibold font-['Inter'] leading-normal"
+              className="self-stretch cursor-pointer h-12 px-6 py-4 bg-zinc-950 rounded-lg inline-flex justify-center items-center gap-2.5 text-white text-base font-semibold font-['Inter'] leading-normal"
               disabled={isLoading}
             >
               {isLoading ? "Signing up..." : isClaimableAccount && activeUserType === "Artist" ? "Claim Account" : "Sign up"}
