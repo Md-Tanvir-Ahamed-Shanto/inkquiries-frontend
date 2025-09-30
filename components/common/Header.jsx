@@ -188,20 +188,7 @@ const Header = () => {
         </Link>
         
         {/* Create Review Post Button */}
-        <button
-          onClick={handleCreateReviewClick}
-          className="px-5 py-3 bg-zinc-950 rounded-lg inline-flex justify-center items-center gap-2.5 cursor-pointer hover:bg-zinc-800 transition-colors"
-          suppressHydrationWarning
-        >
-          <div className="w-5 h-5 relative">
-            <div className="w-4 h-4 left-[1.66px] top-[1.67px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
-            <div className="w-1.5 h-1.5 left-[10.84px] top-[3.33px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
-            <div className="w-1.5 h-0 left-[11.66px] top-[18.33px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
-          </div>
-          <div className="text-white text-base font-medium capitalize leading-normal">
-            Create Review Post
-          </div>
-        </button>
+      
       </div>
 
       {/* Desktop Auth/Profile Section */}
@@ -214,7 +201,21 @@ const Header = () => {
         ) : (
           <>
             {user && (
-              <div className="relative notification-menu-container" suppressHydrationWarning>
+              <div className="relative gap-2  notification-menu-container" suppressHydrationWarning>
+                  <button
+          onClick={handleCreateReviewClick}
+          className="px-5 py-3 bg-zinc-950 mr-2 rounded-lg inline-flex justify-center items-center gap-2.5 cursor-pointer hover:bg-zinc-800 transition-colors"
+          suppressHydrationWarning
+        >
+          <div className="w-5 h-5 relative">
+            <div className="w-4 h-4 left-[1.66px] top-[1.67px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
+            <div className="w-1.5 h-1.5 left-[10.84px] top-[3.33px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
+            <div className="w-1.5 h-0 left-[11.66px] top-[18.33px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
+          </div>
+          <div className="text-white text-base font-medium capitalize leading-normal">
+            Create Review
+          </div>
+        </button>
                 <button 
                   className="p-2 bg-gray-100 rounded-full cursor-pointer hover:bg-gray-200 hover:rounded-full" 
                   suppressHydrationWarning
@@ -286,6 +287,7 @@ const Header = () => {
 
             {user ? (
               <div className="relative" suppressHydrationWarning>
+
                 <button
                   onClick={toggleProfileMenu}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg "
@@ -326,6 +328,20 @@ const Header = () => {
               </div>
             ) : (
               <>
+                <button
+          onClick={handleCreateReviewClick}
+          className="px-5 py-3 bg-zinc-950 rounded-lg inline-flex justify-center items-center gap-2.5 cursor-pointer hover:bg-zinc-800 transition-colors"
+          suppressHydrationWarning
+        >
+          <div className="w-5 h-5 relative">
+            <div className="w-4 h-4 left-[1.66px] top-[1.67px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
+            <div className="w-1.5 h-1.5 left-[10.84px] top-[3.33px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
+            <div className="w-1.5 h-0 left-[11.66px] top-[18.33px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
+          </div>
+          <div className="text-white text-base font-medium capitalize leading-normal">
+            Create Review
+          </div>
+        </button>
                 <Link href="/signup">
                   <div className="w-28 px-6 py-3 bg-gray-100 rounded-lg flex justify-center items-center gap-2.5 cursor-pointer" suppressHydrationWarning>
                     <div className="justify-start text-zinc-950 text-base font-medium capitalize leading-normal" suppressHydrationWarning>
@@ -409,6 +425,25 @@ const Header = () => {
             </div>
           </Link>
 
+          {/* Mobile Create Review Post Button */}
+          <button
+            onClick={() => {
+              handleCreateReviewClick();
+              toggleMobileMenu();
+            }}
+            className="w-full max-w-xs px-6 py-4 bg-zinc-950 rounded-lg flex justify-center items-center gap-2.5 cursor-pointer hover:bg-zinc-800 transition-colors"
+            suppressHydrationWarning
+          >
+            <div className="w-5 h-5 relative">
+              <div className="w-4 h-4 left-[1.66px] top-[1.67px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
+              <div className="w-1.5 h-1.5 left-[10.84px] top-[3.33px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
+              <div className="w-1.5 h-0 left-[11.66px] top-[18.33px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
+            </div>
+            <div className="text-white text-lg font-medium capitalize leading-normal">
+              Create Review
+            </div>
+          </button>
+
           {/* Mobile Auth/Profile Section */}
           <div className="flex flex-col items-center gap-4 w-full px-4" suppressHydrationWarning>
             {loading ? (
@@ -460,6 +495,14 @@ const Header = () => {
             )}
           </div>
         </div>
+      )}
+
+      {/* Create Review Post Popup */}
+      {isCreateReviewOpen && (
+        <CreateReviewPostPopup
+          onClose={() => setIsCreateReviewOpen(false)}
+          onSuccess={handleReviewSuccess}
+        />
       )}
     </div>
   );
