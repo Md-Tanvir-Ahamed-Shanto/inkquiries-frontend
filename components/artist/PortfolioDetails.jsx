@@ -393,7 +393,7 @@ console.log("Commentrs",comments)
             <span className="font-medium">{comments.length}</span>
           </button>
           
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:text-green-500 hover:bg-green-50 transition-all duration-200">
+          <button className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:text-green-500 hover:bg-green-50 transition-all duration-200 cursor-pointer">
             <BiShare size={20} />
             <span className="font-medium">Share</span>
           </button>

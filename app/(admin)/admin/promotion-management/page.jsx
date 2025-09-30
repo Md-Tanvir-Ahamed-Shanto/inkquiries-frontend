@@ -516,7 +516,7 @@ const PromotionTable = () => {
                   
                   {/* Show ellipsis if needed */}
                   {totalPages > 5 && currentPage < totalPages - 2 && (
-                    <button className="hidden sm:block w-8 h-8 px-3 py-[5px]">
+                    <button className="hidden sm:block w-8 h-8 px-3 py-[5px] cursor-pointer">
                       <div className="text-neutral-900 text-xs font-medium">
                         ...
                       </div>

@@ -543,7 +543,7 @@ const ReviewTable = () => {
               })}
               {Math.ceil(filteredReviews.length / pageSize) > 3 && (
                 <>
-                  <button className="hidden sm:block w-8 h-8 px-3 py-[5px]">
+                  <button className="hidden sm:block w-8 h-8 px-3 py-[5px] cursor-pointer">
                     <div className="text-neutral-900 text-xs font-medium">
                       ...
                     </div>

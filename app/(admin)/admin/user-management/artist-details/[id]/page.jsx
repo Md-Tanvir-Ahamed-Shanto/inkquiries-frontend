@@ -221,7 +221,7 @@ function ArtistDetailsContent() {
 
         {/* View Posts */}
         <div className="flex justify-start">
-          <button className="text-sm sm:text-base font-medium text-neutral-600 ">
+          <button className="text-sm sm:text-base font-medium text-neutral-600 cursor-pointer">
             View Review Post
           </button>
         </div>
