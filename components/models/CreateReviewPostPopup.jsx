@@ -617,7 +617,7 @@ export default function CreateReviewPostPopup({ onClose, onSuccess }) {
                 name="artDate"
                 value={formData.artDate}
                 onChange={handleInputChange}
-                className={`flex-1 text-neutral-700 text-base sm:text-lg font-normal leading-snug tracking-tight bg-transparent outline-none
+                className={`flex-1 text-neutral-700 cursor-pointer text-base sm:text-lg font-normal leading-snug tracking-tight bg-transparent outline-none
                   ${formData.artDate ? "" : "text-zinc-400"}`} // Keep text-zinc-400 only when no date is selected
                 aria-label="Art Date"
               />
@@ -829,7 +829,7 @@ export default function CreateReviewPostPopup({ onClose, onSuccess }) {
             {/* Post Button */}
             <button
               type="submit"
-              className="h-12 px-6 py-3 bg-zinc-950 hover:bg-zinc-800 rounded-full flex justify-center items-center transition-all duration-200 mt-4
+              className="h-12 px-6 cursor-pointer py-3 bg-zinc-950 hover:bg-zinc-800 rounded-full flex justify-center items-center transition-all duration-200 mt-4
                            text-white text-base sm:text-lg font-medium leading-tight tracking-wide
                            focus:outline-none focus:ring-2 focus:ring-zinc-700 active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isSubmitting}
