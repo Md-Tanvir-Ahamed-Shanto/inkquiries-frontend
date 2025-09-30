@@ -9,6 +9,7 @@ import { BiNotification } from "react-icons/bi";
 import { IoNotificationsOutline } from "react-icons/io5";
 import Image from "next/image";
 import backendUrl from "@/utils/baseUrl";
+import CreateReviewPostPopup from "@/components/models/CreateReviewPostPopup";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -18,6 +19,7 @@ const Header = () => {
   const [notificationCount, setNotificationCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isCreateReviewOpen, setIsCreateReviewOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   
@@ -123,6 +125,21 @@ const Header = () => {
     setUser(null);
     router.push('/');
   };
+
+  // Handle Create Review Post button click
+  const handleCreateReviewClick = () => {
+    if (user) {
+      setIsCreateReviewOpen(true);
+    } else {
+      router.push('/login');
+    }
+  };
+
+  // Handle successful review creation
+  const handleReviewSuccess = () => {
+    setIsCreateReviewOpen(false);
+    // Optionally refresh notifications or redirect
+  };
 // console.log("user",user)
   const handleProfileClick = () => {
     if (user) {
@@ -169,6 +186,22 @@ const Header = () => {
             Explore
           </div>
         </Link>
+        
+        {/* Create Review Post Button */}
+        <button
+          onClick={handleCreateReviewClick}
+          className="px-5 py-3 bg-zinc-950 rounded-lg inline-flex justify-center items-center gap-2.5 cursor-pointer hover:bg-zinc-800 transition-colors"
+          suppressHydrationWarning
+        >
+          <div className="w-5 h-5 relative">
+            <div className="w-4 h-4 left-[1.66px] top-[1.67px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
+            <div className="w-1.5 h-1.5 left-[10.84px] top-[3.33px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
+            <div className="w-1.5 h-0 left-[11.66px] top-[18.33px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
+          </div>
+          <div className="text-white text-base font-medium capitalize leading-normal">
+            Create Review Post
+          </div>
+        </button>
       </div>
 
       {/* Desktop Auth/Profile Section */}
