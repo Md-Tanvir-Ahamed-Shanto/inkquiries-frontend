@@ -1,11 +1,8 @@
 import React from "react";
 import Image from "next/image";
-import { GoHeartFill, GoComment } from "react-icons/go";
-import { BsThreeDots } from "react-icons/bs";
 import { FiTrash2 } from "react-icons/fi";
 import backendUrl from "@/utils/baseUrl";
-import heartIcon from "@/public/icon/heart.png";
-import commentIcon from "@/public/icon/comment.png";
+
 import placeHolderImage from "@/public/placeholder-image.svg";
 
 function CardPortfolio({ title, style, imageUrl, description,onDelete,userId = null, artistId }) {

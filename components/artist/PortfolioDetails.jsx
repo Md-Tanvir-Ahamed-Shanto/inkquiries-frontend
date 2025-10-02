@@ -20,6 +20,7 @@ import {
 import { getCurrentUser } from "../../service/authApi";
 import DeleteModal from "../common/DeleteModal";
 import backendUrl from "@/utils/baseUrl";
+import { toast } from "sonner";
 
 function PortfolioDetails({ item, onBack, isOwner, user }) {
   const [editing, setEditing] = useState(false);
@@ -84,7 +85,8 @@ console.log("Commentrs",comments)
     // Check authentication before allowing comment
     const currentUser = await getCurrentUser();
     if (!currentUser) {
-      alert('Please log in to comment on this portfolio item.');
+      // Redirect to login page instead of showing alert
+      window.location.href = "/login";
       return;
     }
     
@@ -103,10 +105,9 @@ console.log("Commentrs",comments)
   };
 
   const handleLike = async () => {
-    // Check authentication before allowing like
     const currentUser = await getCurrentUser();
     if (!currentUser) {
-      alert('Please log in to like this portfolio item.');
+      window.location.href = "/login";
       return;
     }
 
@@ -347,14 +348,8 @@ console.log("Commentrs",comments)
         <div className="flex items-center gap-6 py-4 border-y border-gray-200">
           <button
             onClick={handleLike}
-            disabled={likeLoading || !isAuthenticated}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
-              !isAuthenticated 
-                ? 'text-gray-400 cursor-not-allowed' 
-                : isLiked 
-                ? 'text-red-500 bg-red-50 hover:bg-red-100' 
-                : 'text-gray-600 hover:text-red-500 hover:bg-red-50'
-            }`}
+            disabled={likeLoading}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all cursor-pointer duration-200`}
             title={!isAuthenticated ? 'Please log in to like this portfolio item' : ''}
           >
             {likeLoading ? (
@@ -375,11 +370,7 @@ console.log("Commentrs",comments)
           </button>
           
           <button
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
-              !isAuthenticated 
-                ? 'text-gray-400 cursor-not-allowed' 
-                : 'text-gray-600 hover:text-gray-500 hover:bg-gray-50'
-            }`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 cursor-pointer`}
             title={!isAuthenticated ? 'Please log in to comment on this portfolio item' : ''}
           >
             <Image
