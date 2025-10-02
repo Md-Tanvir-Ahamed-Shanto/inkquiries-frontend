@@ -11,12 +11,12 @@ export const metadata = {
 export default function ArtistLayout({ children }) {
   return (
     <>
+      <div className="p-4 bg-background text-foreground" suppressHydrationWarning>
       <Header />
       <ToasterProvider />
-      <div className="p-4 bg-background text-foreground" suppressHydrationWarning>
         {children}
-      </div>
       <Footer />
+      </div>
     </>
   );
 }

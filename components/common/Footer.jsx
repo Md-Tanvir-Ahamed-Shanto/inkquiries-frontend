@@ -24,19 +24,12 @@ const Footer = () => {
                   <span className="text-gray-200 text-sm sm:text-base font-medium lowercase leading-normal">
                     @gmail
                   </span>
-                  <span className="text-gray-200 text-sm sm:text-base font-medium capitalize leading-normal">
+                  <span className="text-gray-200 text-sm sm:text-base font-medium leading-normal">
                     .com
                   </span>
                 </div>
               </div>
-              <div className="flex justify-start items-start gap-3 sm:gap-4">
-                <div className="w-5 h-5 relative">
-                  <Image width={100} height={100} src={Phone} alt="Phone" />
-                </div>
-                <div className="justify-start text-gray-200 text-sm sm:text-base font-medium capitalize leading-normal">
-                  +1 064 134 4564
-                </div>
-              </div>
+             
             </div>
           </div>
           <div className="flex flex-col sm:flex-row justify-start items-start gap-10 sm:gap-12 md:gap-16"> 
@@ -61,15 +54,21 @@ const Footer = () => {
                 Legal
               </div>
               <div className="flex flex-col justify-start items-start gap-1.5 sm:gap-2"> 
-                <div className="justify-start text-white text-sm sm:text-base font-normal capitalize leading-normal">
+                <a href="/privacy-policy" className="justify-start text-white text-sm sm:text-base font-normal capitalize leading-normal hover:underline">
                   privacy policy
-                </div>
-                <div className="justify-start text-white text-sm sm:text-base font-normal capitalize leading-normal">
+                </a>
+                <a href="/term-conditions" className="justify-start text-white text-sm sm:text-base font-normal capitalize leading-normal hover:underline">
                   term & conditions
-                </div>
-                <div className="justify-start text-white text-sm sm:text-base font-normal capitalize leading-normal">
+                </a>
+                <a href="/cookies-policy" className="justify-start text-white text-sm sm:text-base font-normal capitalize leading-normal hover:underline">
                   cookies policy
-                </div>
+                </a>
+                <a href="/terms-of-service" className="justify-start text-white text-sm sm:text-base font-normal capitalize leading-normal hover:underline">
+                  terms of service
+                </a>
+                <a href="/data-deletion-instructions" className="justify-start text-white text-sm sm:text-base font-normal capitalize leading-normal hover:underline">
+                  data deletion
+                </a>
               </div>
             </div>
             <div className="flex flex-col justify-start items-start gap-4 sm:gap-6"> 
