@@ -109,7 +109,7 @@ export default function GeneralSettingsPage() {
             />
             <button
               onClick={() => fileInputRef.current.click()}
-              className="flex-1 sm:flex-none sm:w-auto h-10 px-5 py-2 bg-neutral-100 rounded-lg flex items-center justify-center hover:bg-neutral-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 cursor-pointer sm:flex-none sm:w-auto h-10 px-5 py-2 bg-neutral-100 rounded-lg flex items-center justify-center hover:bg-neutral-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={saving}
             >
               <span className="text-neutral-800 text-sm md:text-base font-medium tracking-tight">
@@ -135,12 +135,12 @@ export default function GeneralSettingsPage() {
                   setSaving(false);
                 }
               }}
-              className="flex-1 sm:flex-none sm:w-auto h-10 px-5 py-1.5 bg-neutral-100 rounded-lg flex items-center justify-center hover:bg-neutral-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 sm:flex-none cursor-pointer sm:w-auto h-10 px-5 py-1.5 bg-neutral-100 rounded-lg flex items-center justify-center hover:bg-neutral-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={
                 saving || profile.profilePhoto === "/assets/profile.png"
               }
             >
-              <span className="text-neutral-600 text-sm md:text-base font-medium tracking-tight">
+              <span className="text-neutral-600 cursor-pointer text-sm md:text-base font-medium tracking-tight">
                 Delete photo
               </span>
             </button>
@@ -261,7 +261,7 @@ export default function GeneralSettingsPage() {
               </div>
 
               {/* Change Password Button */}
-              <button
+              <button 
                 onClick={async () => {
                   try {
                     if (passwords.newPassword !== passwords.confirmPassword) {
@@ -301,7 +301,7 @@ export default function GeneralSettingsPage() {
                   !passwords.confirmPassword
                 }
               >
-                <span className="text-white text-sm md:text-base font-medium font-['Inter'] tracking-tight">
+                <span className="text-white cursor-pointer text-sm md:text-base font-medium font-['Inter'] tracking-tight">
                   {saving ? "Changing..." : "Change Password"}
                 </span>
               </button>
@@ -341,7 +341,7 @@ export default function GeneralSettingsPage() {
             setSaving(false);
           }
         }}
-        className="w-full md:w-40 h-10 md:h-12 px-4 py-2 md:py-3 bg-gray-800 rounded-xl flex justify-center items-center hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full md:w-40 cursor-pointer h-10 md:h-12 px-4 py-2 md:py-3 bg-gray-800 rounded-xl flex justify-center items-center hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         disabled={saving || loading}
       >
         <span className="text-white text-sm md:text-base font-medium font-['Inter'] tracking-tight">

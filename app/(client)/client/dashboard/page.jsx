@@ -95,7 +95,7 @@ const DashboardContent = () => {
         <div className="w-full md:w-auto inline-flex flex-col justify-center items-center md:items-start gap-4">
           <button
             onClick={() => setIsOpen(true)}
-            className="w-full sm:w-auto px-5 py-3 bg-zinc-950 rounded-lg inline-flex justify-center items-center gap-2.5"
+            className="w-full sm:w-auto px-5 py-3 bg-zinc-950 rounded-lg inline-flex justify-center items-center gap-2.5 cursor-pointer"
           >
             <div className="w-5 h-5 relative">
               <div className="w-4 h-4 left-[1.66px] top-[1.67px] absolute outline-[1.25px] outline-offset-[-0.62px] outline-white" />
