@@ -300,7 +300,7 @@ console.log("Commentrs",comments)
           <>
             <div className="col-span-1 md:col-span-3 h-80 md:h-[605px]">
               <img
-                src={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}${item.imageUrls[0]}`}
+                src={`${process.env.NEXT_PUBLIC_API_URL || "https://api.inkquiries.org"}${item.imageUrls[0]}`}
                 alt={`${item.title} - Main`}
                 className="w-full h-full object-contain rounded-xl"
               />
@@ -308,7 +308,7 @@ console.log("Commentrs",comments)
             {item.imageUrls.slice(1).map((imageUrl, index) => (
               <div key={index} className="h-40 md:h-full">
                 <img
-                  src={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}${imageUrl}`}
+                  src={`${process.env.NEXT_PUBLIC_API_URL || "https://api.inkquiries.org"}${imageUrl}`}
                   alt={`${item.title} - ${index + 2}`}
                   className="w-full h-full object-contain rounded-xl"
                 />

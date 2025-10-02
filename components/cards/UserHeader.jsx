@@ -2,7 +2,7 @@ import { formatTimeAgo } from "@/utils/formatedTime";
 import Link from "next/link";
 
 const UserHeader = ({ userInfo, review }) => {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.inkquiries.org";
   const user = userInfo || review?.client;
   const profilePicture = user?.profilePhoto ? `${baseUrl}${user.profilePhoto}` : null;
   const name = user?.name || "Anonymous";
