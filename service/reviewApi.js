@@ -208,12 +208,21 @@ export const getAllReviews = async (reportedOnly = false) => {
 
 export const getRecentReviews = async (params = {}) => {
   try {
-    const queryParams = new URLSearchParams({
+    // Create query parameters object with all possible parameters
+    const queryParamsObj = {
       page: params.page || 1,
       limit: params.limit || 6,
       sortBy: "createdAt",
       sortOrder: "desc",
-    }).toString();
+    };
+    
+    // Add tattooStyle parameter if it exists
+    if (params.tattooStyle) {
+      queryParamsObj.tattooStyle = params.tattooStyle;
+    }
+    
+    // Convert to URL parameters
+    const queryParams = new URLSearchParams(queryParamsObj).toString();
 
     const response = await apiFetch(`/api/reviews?${queryParams}`, "GET");
     return response;

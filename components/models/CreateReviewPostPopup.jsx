@@ -74,9 +74,29 @@ export default function CreateReviewPostPopup({ onClose, onSuccess }) {
     "Chicano",
     "Biomechanical",
     "Abstract",
+    "Featured",
+    "Minimalist Tattoos",
+    "Traditional Tattoos",
+    "Neo-Traditional Tattoos",
+    "Realism Tattoos",
+    "Blackwork Tattoos",
+    "Fine Line Tattoos",
+    "Watercolor Tattoos",
+    "Japanese Tattoos",
+    "Tribal Tattoos",
+    "Geometric Tattoos",
+    "Dotwork Tattoos",
+    "Chicano Tattoos",
+    "Portrait Tattoos",
+    "Script / Lettering Tattoos",
+    "Abstract Tattoos",
+    "Surrealism Tattoos",
+    "Biomechanical Tattoos",
+    "Celtic Tattoos",
+    "Mandala Tattoos",
   ];
 
-  const baseUrl = backendUrl
+  const baseUrl = backendUrl;
 
   // Effect to calculate overall rating from detailed ratings
   useEffect(() => {
@@ -228,7 +248,11 @@ export default function CreateReviewPostPopup({ onClose, onSuccess }) {
       };
 
       // Make the API call to create the review with photos in a single request
-      const response = await createReview(artistId, reviewSubmission, photoFiles);
+      const response = await createReview(
+        artistId,
+        reviewSubmission,
+        photoFiles
+      );
 
       return {
         success: true,
@@ -289,7 +313,7 @@ export default function CreateReviewPostPopup({ onClose, onSuccess }) {
       setIsSubmitting(false);
       return;
     }
-    
+
     if (imageFiles.length === 0) {
       toast.error("Please upload at least one photo.");
       setIsSubmitting(false);

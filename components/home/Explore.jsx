@@ -13,6 +13,7 @@ const Explore = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMoreData, setHasMoreData] = useState(true);
   const [likeStatusMap, setLikeStatusMap] = useState({});
+  const [selectedCategory, setSelectedCategory] = useState("Featured");
   
   // Ref for the intersection observer
   const observer = useRef();
@@ -57,10 +58,18 @@ const Explore = () => {
         setLoadingMore(true);
       }
 
-      const response = await getRecentReviews({ 
+      // Add tattooStyle parameter if category is not "Featured"
+      const params = { 
         limit: 10, // Increased from 6 for infinite scroll
         page 
-      });
+      };
+      
+      // Only add tattooStyle filter if not on "Featured" category
+      if (selectedCategory !== "Featured") {
+        params.tattooStyle = selectedCategory;
+      }
+
+      const response = await getRecentReviews(params);
       
       if (response && response.reviews) {
         const newReviews = response.reviews;
@@ -114,8 +123,10 @@ const Explore = () => {
 
   // Initial data fetch
   useEffect(() => {
+    setCurrentPage(1);
+    setReviews([]);
     fetchReviews(1, false);
-  }, []);
+  }, [selectedCategory]);
 
   // Cleanup observer on unmount
   useEffect(() => {
@@ -129,7 +140,7 @@ const Explore = () => {
   if (loading && reviews.length === 0) {
     return (
       <div className="w-full px-4 sm:px-6 lg:px-12 py-6">
-        <CategoryTab />
+        <CategoryTab onCategoryChange={setSelectedCategory} />
         <div className="lg:px-16 mt-10">
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
@@ -142,7 +153,7 @@ const Explore = () => {
   if (error && reviews.length === 0) {
     return (
       <div className="w-full px-4 sm:px-6 lg:px-12 py-6">
-        <CategoryTab />
+        <CategoryTab onCategoryChange={setSelectedCategory} />
         <div className="lg:px-16 mt-10">
           <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
             <p className="text-red-500 mb-4">{error}</p>
@@ -160,7 +171,7 @@ const Explore = () => {
 
   return (
     <div className="w-full px-4 sm:px-6 lg:px-12 py-6">
-      <CategoryTab />
+      <CategoryTab onCategoryChange={setSelectedCategory} />
       <div className="lg:px-16 mt-10">
         <div className="columns-1 md:columns-2 xl:columns-3 gap-6 space-y-6">
           {reviews?.map((item, index) => (
