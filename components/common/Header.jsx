@@ -20,10 +20,34 @@ const Header = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isCreateReviewOpen, setIsCreateReviewOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   
+  // Helper function to validate profile photo
+  const isValidProfilePhoto = (profilePhoto) => {
+    return profilePhoto && 
+           typeof profilePhoto === 'string' && 
+           profilePhoto.trim() !== '' && 
+           profilePhoto !== 'null' && 
+           profilePhoto !== 'undefined';
+  };
+
+  // Helper function to get the correct image URL
+  const getImageUrl = (profilePhoto) => {
+    if (!profilePhoto) return '/placeholder-image.svg';
+    
+    // Check if it's already a full URL (starts with http:// or https://)
+    if (profilePhoto.startsWith('http://') || profilePhoto.startsWith('https://')) {
+      return profilePhoto;
+    }
+    
+    // Otherwise, it's a relative path, so prepend the backend URL
+    return `${backendUrl}${profilePhoto}`;
+  };
+  
   useEffect(() => {
+    setIsClient(true);
     const currentUser = getCurrentUser();
     console.log("user",currentUser)
     setUser(currentUser);
@@ -285,7 +309,7 @@ const Header = () => {
               </div>
             )}
 
-            {user ? (
+            {isClient && user ? (
               <div className="relative" suppressHydrationWarning>
 
                 <button
@@ -294,9 +318,9 @@ const Header = () => {
                   suppressHydrationWarning
                 >
                   <div className="w-8 h-8 rounded-full overflow-hidden cursor-pointer bg-gray-200 flex items-center justify-center" suppressHydrationWarning>
-                    {user?.profilePhoto ? (
+                    {isValidProfilePhoto(user?.profilePhoto) ? (
                       <Image
-                        src={user?.profilePhoto ? `${backendUrl}${user.profilePhoto}` : '/placeholder-image.svg'} 
+                        src={getImageUrl(user.profilePhoto)} 
                         alt="User Avatar" 
                         width={32} 
                         height={32} 
@@ -326,7 +350,7 @@ const Header = () => {
                   </div>
                 )}
               </div>
-            ) : (
+            ) : isClient ? (
               <>
                 <button
           onClick={handleCreateReviewClick}
@@ -357,6 +381,9 @@ const Header = () => {
                   </div>
                 </Link>
               </>
+            ) : (
+              // Fallback for server-side rendering
+              <div className="w-28 h-12 bg-gray-100 rounded-lg animate-pulse"></div>
             )}
           </>
         )}

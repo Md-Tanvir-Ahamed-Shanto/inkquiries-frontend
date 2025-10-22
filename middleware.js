@@ -29,8 +29,8 @@ export function middleware(request) {
     '/set-password',
     '/explore',
     '/artist/profile/',
-    '/client/profile/'
-
+    '/client/profile/',
+    '/debug-auth'
   ];
 
   // Allow access to public routes

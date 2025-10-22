@@ -8,7 +8,7 @@ import { registerArtist, registerClient, claimArtistAccount } from "../../servic
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
-import { FaFacebook, FaInstagram } from "react-icons/fa6";
+import { FaFacebook } from "react-icons/fa6";
 import backendUrl from "@/utils/baseUrl";
 
 const Registration = () => {
@@ -204,7 +204,7 @@ const Registration = () => {
   const handleSocialLogin = (provider) => {
     // The social login flow is a redirect.
     // The backend handles the OAuth process and redirects back to the frontend with a token.
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.inkquiries.org';
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
     const role = activeUserType.toLowerCase();
     window.location.href = `${backendUrl}/auth/${provider}?role=${role}`;
   };
@@ -313,21 +313,17 @@ const Registration = () => {
               - Or -
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-4">
               <button
                 type="button"
-                className="flex-1 cursor-pointer h-12 px-6 py-4 bg-gray-100 rounded-lg flex justify-center items-center gap-2.5 text-zinc-950 text-base font-semibold font-['Inter'] leading-normal"
-                onClick={() => handleSocialLogin("facebook")} // You'll need to implement a 'facebook' endpoint
+                className="w-full cursor-pointer h-12 px-6 py-4 bg-blue-600 hover:bg-blue-700 rounded-lg flex justify-center items-center gap-2.5 text-white text-base font-semibold font-['Inter'] leading-normal transition-colors"
+                onClick={() => handleSocialLogin("facebook")}
               >
-                <FaFacebook size={16} /> Facebook
+                <FaFacebook size={16} /> Continue with Facebook
               </button>
-              <button
-                type="button"
-                className="flex-1 cursor-pointer h-12 px-6 py-4 bg-gray-100 rounded-lg flex justify-center items-center gap-2.5 text-zinc-950 text-base font-semibold font-['Inter'] leading-normal"
-                onClick={() => handleSocialLogin("instagram")} // You'll need to implement an 'instagram' endpoint
-              >
-                <FaInstagram size={16} /> Instagram
-              </button>
+              <p className="text-sm text-gray-500 text-center">
+                Instagram login is temporarily unavailable due to platform changes.
+              </p>
             </div>
 
             <div className="self-stretch text-center">

@@ -18,13 +18,16 @@ export const registerArtist = async (data) => {
 export const loginUser = async (data) => {
   try {
     const res = await apiFetch("/api/auth/login", "POST", data);
+    console.log('loginUser - API response:', res);
+    
     if (res.token) {
-      // Store in both cookies and localStorage for consistency
+      // Store token in both cookies and localStorage
       Cookies.set("token", res.token, {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
       });
       localStorage.setItem("token", res.token);
+      console.log('loginUser - token stored in localStorage and cookies');
       
       const userData = res.user || res.artist || res.client;
       if (userData) {
@@ -33,7 +36,13 @@ export const loginUser = async (data) => {
           sameSite: 'strict',
         });
         localStorage.setItem("user", JSON.stringify(userData));
+        console.log('loginUser - user data stored in localStorage:', userData);
+        console.log('loginUser - localStorage user check:', localStorage.getItem("user"));
+      } else {
+        console.warn('loginUser - no user data found in response');
       }
+    } else {
+      console.warn('loginUser - no token found in response');
     }
     return res;
   } catch (error) {
@@ -57,23 +66,114 @@ export const logoutUser = () => {
 
 export const getCurrentUser = () => {
   try {
-    // Try to get user from cookies first, then localStorage as fallback
-    let user = Cookies.get("user");
-    if (!user) {
-      user = localStorage.getItem("user");
+    console.log('getCurrentUser - Starting function execution');
+    
+    // Check if we're in a browser environment (client-side)
+    if (typeof window === 'undefined') {
+      console.log('getCurrentUser - Server-side execution, checking cookies only');
+      // Server-side: only check cookies
+      const user = Cookies.get("user");
       if (user) {
-        user = JSON.parse(user);
-        // Set cookie without httpOnly (client-side can't set httpOnly)
-        Cookies.set("user", JSON.stringify(user), {
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict',
-        });
-        return user;
+        try {
+          const userData = JSON.parse(user);
+          console.log('getCurrentUser - found in cookies (server-side):', userData);
+          return userData;
+        } catch (parseError) {
+          console.error('getCurrentUser - failed to parse cookie user (server-side):', parseError);
+        }
+      }
+      return null;
+    }
+    
+    // Client-side execution
+    console.log('getCurrentUser - Client-side execution');
+    
+    // Check localStorage first
+    let user = null;
+    try {
+      user = localStorage.getItem("user");
+      console.log('getCurrentUser - localStorage raw value:', user);
+    } catch (localStorageError) {
+      console.error('getCurrentUser - localStorage access error:', localStorageError);
+    }
+    
+    if (user) {
+      try {
+        const userData = JSON.parse(user);
+        console.log('getCurrentUser - found in localStorage:', userData);
+        
+        // Sync with cookies if not already there
+        const cookieUser = Cookies.get("user");
+        if (!cookieUser) {
+          console.log('getCurrentUser - syncing localStorage to cookies');
+          Cookies.set("user", JSON.stringify(userData), {
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+          });
+        }
+        return userData;
+      } catch (parseError) {
+        console.error('getCurrentUser - failed to parse localStorage user:', parseError);
+        try {
+          localStorage.removeItem("user"); // Clear corrupted data
+        } catch (removeError) {
+          console.error('getCurrentUser - failed to remove corrupted localStorage:', removeError);
+        }
       }
     }
-    return user ? JSON.parse(user) : null;
+    
+    // Fallback to cookies if localStorage is empty or corrupted
+    console.log('getCurrentUser - checking cookies...');
+    user = Cookies.get("user");
+    console.log('getCurrentUser - cookies raw value:', user);
+    
+    if (user) {
+      try {
+        // Clean the cookie data before parsing
+        let cleanUser = user;
+        
+        // Trim whitespace
+        cleanUser = cleanUser.trim();
+        
+        // Handle potential double-encoding issues
+        if (cleanUser.startsWith('"') && cleanUser.endsWith('"')) {
+          cleanUser = cleanUser.slice(1, -1);
+        }
+        
+        // Handle escaped quotes
+        cleanUser = cleanUser.replace(/\\"/g, '"');
+        
+        console.log('getCurrentUser - cleaned cookie data:', cleanUser);
+        
+        const userData = JSON.parse(cleanUser);
+        console.log('getCurrentUser - found in cookies:', userData);
+        
+        // Clean the userData object
+        if (userData.profilePhoto && typeof userData.profilePhoto === 'string') {
+          userData.profilePhoto = userData.profilePhoto.trim();
+        }
+        
+        // Sync with localStorage (only on client-side)
+        try {
+          console.log('getCurrentUser - syncing cookies to localStorage');
+          localStorage.setItem("user", JSON.stringify(userData));
+          console.log('getCurrentUser - localStorage sync completed');
+        } catch (syncError) {
+          console.error('getCurrentUser - failed to sync to localStorage:', syncError);
+        }
+        
+        return userData;
+      } catch (parseError) {
+        console.error('getCurrentUser - failed to parse cookie user:', parseError);
+        console.error('getCurrentUser - problematic cookie data:', user);
+        Cookies.remove("user"); // Clear corrupted data
+      }
+    }
+    
+    console.log('getCurrentUser - no valid user data found in localStorage or cookies');
+    return null;
   } catch (error) {
-    console.error("Failed to get current user:", error.message);
+    console.error("getCurrentUser - unexpected error:", error.message, error.stack);
     return null;
   }
 };
@@ -85,6 +185,45 @@ export const checkUserRole = () => {
   } catch (error) {
     console.error("Failed to check user role:", error.message);
     return null;
+  }
+};
+
+export const handleOAuthCallback = async () => {
+  try {
+    // Get user data and token from cookies (set by backend OAuth)
+    const userCookie = Cookies.get('user');
+    const tokenCookie = Cookies.get('token');
+
+    console.log('OAuth callback - userCookie:', userCookie);
+    console.log('OAuth callback - tokenCookie:', tokenCookie);
+
+    if (userCookie && tokenCookie) {
+      const userData = JSON.parse(userCookie);
+      
+      // Store in localStorage for frontend access
+      localStorage.setItem('token', tokenCookie);
+      localStorage.setItem('user', JSON.stringify(userData));
+
+      console.log('OAuth callback - userData stored:', userData);
+
+      return { success: true, user: userData, token: tokenCookie };
+    }
+
+    // If no cookies found, check if data is already in localStorage
+    const localUser = localStorage.getItem('user');
+    const localToken = localStorage.getItem('token');
+    
+    if (localUser && localToken) {
+      const userData = JSON.parse(localUser);
+      console.log('OAuth callback - found in localStorage:', userData);
+      return { success: true, user: userData, token: localToken };
+    }
+
+    console.log('OAuth callback - no authentication data found');
+    return { success: false, error: 'No authentication data found' };
+  } catch (error) {
+    console.error("Failed to handle OAuth callback:", error.message);
+    return { success: false, error: error.message };
   }
 };
 

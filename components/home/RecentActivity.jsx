@@ -23,7 +23,7 @@ const RecentActivity = () => {
       } catch (err) {
         console.error("Error fetching recent reviews:", err);
         setError("Failed to load recent activity");
-        setReviews(fallbackData);
+        setReviews([]);
       } finally {
         setLoading(false);
       }

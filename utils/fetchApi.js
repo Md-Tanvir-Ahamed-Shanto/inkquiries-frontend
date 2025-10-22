@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.inkquiries.org";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 export async function apiFetch(endpoint, method = "GET", body = null, isFormData = false) {
   // Try to get token from cookies first, then localStorage as fallback

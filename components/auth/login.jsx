@@ -9,7 +9,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { loginUser } from "../../service/authApi"; 
 import { toast } from "sonner";
-import { FaFacebook, FaInstagram } from "react-icons/fa6";
+import { FaFacebook } from "react-icons/fa6";
 // import { setCookie } from "cookies-next";
 // import { getCookie } from "cookies-next";
 
@@ -47,11 +47,11 @@ const LoginPage = () => {
 
     try {
       const res = await loginUser(formData);  
-      localStorage.setItem("token", res.token);
-      localStorage.setItem("user", JSON.stringify(res.user));
-      if(res.user.role === "artist"){
+      // localStorage storage is already handled in loginUser function
+      const userData = res.user || res.artist || res.client;
+      if(userData.role === "artist"){
         router.push("/artist/dashboard");
-      } else if(res.user.role === "admin"){
+      } else if(userData.role === "admin"){
         router.push("/admin");
       } else {
         router.push("/");
@@ -73,7 +73,7 @@ const LoginPage = () => {
 
   const handleSocialLogin = (provider) => {
     // Redirect to OAuth provider with role parameter
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.inkquiries.org';
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
     const role = activeUserType.toLowerCase();
     window.location.href = `${backendUrl}/auth/${provider}?role=${role}`;
   };
@@ -153,21 +153,45 @@ const LoginPage = () => {
               - Or -
             </div>
 
-            <div className="flex gap-4">
-               <button
-                type="button"
-                className="flex-1 cursor-pointer h-12 px-6 py-4 bg-gray-100 rounded-lg flex justify-center items-center gap-2.5 text-zinc-950 text-base font-semibold font-['Inter'] leading-normal"
-                onClick={() => handleSocialLogin("facebook")} // You'll need to implement a 'facebook' endpoint
-              >
-                <FaFacebook size={16} /> Facebook
-              </button>
+            {/* User Type Selector for Social Login */}
+            {/* <div className="flex flex-col gap-4">
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  className={`flex-1 h-10 px-4 py-2 rounded-lg border transition-colors ${
+                    activeUserType === "Client"
+                      ? "bg-zinc-950 text-white border-zinc-950"
+                      : "bg-white text-zinc-950 border-zinc-200 hover:border-zinc-300"
+                  }`}
+                  onClick={() => setActiveUserType("Client")}
+                >
+                  Client
+                </button>
+                <button
+                  type="button"
+                  className={`flex-1 h-10 px-4 py-2 rounded-lg border transition-colors ${
+                    activeUserType === "Artist"
+                      ? "bg-zinc-950 text-white border-zinc-950"
+                      : "bg-white text-zinc-950 border-zinc-200 hover:border-zinc-300"
+                  }`}
+                  onClick={() => setActiveUserType("Artist")}
+                >
+                  Artist
+                </button>
+              </div>
+            </div> */}
+
+            <div className="flex flex-col gap-4">
               <button
                 type="button"
-                className="flex-1 cursor-pointer h-12 px-6 py-4 bg-gray-100 rounded-lg flex justify-center items-center gap-2.5 text-zinc-950 text-base font-semibold font-['Inter'] leading-normal"
-                onClick={() => handleSocialLogin("instagram")} // You'll need to implement an 'instagram' endpoint
+                className="w-full cursor-pointer h-12 px-6 py-4 bg-blue-600 hover:bg-blue-700 rounded-lg flex justify-center items-center gap-2.5 text-white text-base font-semibold font-['Inter'] leading-normal transition-colors"
+                onClick={() => handleSocialLogin("facebook")}
               >
-                <FaInstagram size={16} /> Instagram
+                <FaFacebook size={16} /> Continue with Facebook
               </button>
+              <p className="text-sm text-gray-500 text-center">
+                Instagram login is temporarily unavailable due to platform changes.
+              </p>
             </div>
 
             <div className="self-stretch text-center">
