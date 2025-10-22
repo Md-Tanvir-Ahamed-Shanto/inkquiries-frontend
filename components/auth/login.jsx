@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import AuthImage from "@/public/assets/authimage.png";
 import Link from "next/link";
@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { FaApple } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
-import { loginUser } from "../../service/authApi"; 
+import { loginUser, getCurrentUser } from "../../service/authApi"; 
 import { toast } from "sonner";
 import { FaFacebook } from "react-icons/fa6";
 // import { setCookie } from "cookies-next";
@@ -24,6 +24,25 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Check if user is already logged in and redirect accordingly
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      const currentUser = getCurrentUser();
+      if (currentUser) {
+        // User is already logged in, redirect based on role
+        if (currentUser.role === "artist") {
+          router.push("/artist/dashboard");
+        } else if (currentUser.role === "admin") {
+          router.push("/admin");
+        } else {
+          router.push("/");
+        }
+      }
+    };
+
+    checkAuthStatus();
+  }, [router]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
