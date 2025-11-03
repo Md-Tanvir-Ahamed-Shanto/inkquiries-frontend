@@ -8,6 +8,7 @@ const Subscription = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [responseData, setResponseData] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [plans, setPlans] = useState([
     { 
@@ -219,6 +220,8 @@ const Subscription = () => {
       }
 
       setSuccess('Subscription payment processed successfully!');
+      // Store the response data for displaying mock payment notice
+      setResponseData(response.data);
       setCardData({
         cardNumber: '',
         expiryMonth: '',
@@ -440,19 +443,30 @@ const Subscription = () => {
             </div>
           </div>
 
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md">
-              {error}
+          {success && (
+        <div className="mb-4 p-3 bg-green-50 text-green-700 rounded-md flex flex-col">
+          <div>{success}</div>
+          {responseData?.isMockPayment && (
+            <div className="mt-2 text-sm bg-yellow-100 p-2 rounded">
+              <strong>Note:</strong> This is a mock payment for testing purposes. No actual charges were made.
             </div>
           )}
+        </div>
+      )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors disabled:bg-gray-400"
-          >
-            {loading ? 'Processing...' : `Pay $${subscriptionAmount}`}
-          </button>
+      {error && (
+        <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md">
+          {error}
+        </div>
+      )}
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors disabled:bg-gray-400"
+      >
+        {loading ? 'Processing...' : `Pay $${subscriptionAmount}`}
+      </button>
         </form>
       )}
 
