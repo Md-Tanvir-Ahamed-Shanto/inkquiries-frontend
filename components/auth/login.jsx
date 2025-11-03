@@ -9,7 +9,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { loginUser, getCurrentUser } from "../../service/authApi"; 
 import { toast } from "sonner";
-import { FaFacebook } from "react-icons/fa6";
+import { FaFacebook, FaInstagram } from "react-icons/fa6";
 // import { setCookie } from "cookies-next";
 // import { getCookie } from "cookies-next";
 
@@ -94,7 +94,13 @@ const LoginPage = () => {
     // Redirect to OAuth provider with role parameter
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
     const role = activeUserType.toLowerCase();
-    window.location.href = `${backendUrl}/auth/${provider}?role=${role}`;
+    
+    if (provider === 'instagram') {
+      // Instagram authentication goes through Facebook OAuth with Instagram scope
+      window.location.href = `${backendUrl}/auth/facebook?role=${role}&includeInstagram=true`;
+    } else {
+      window.location.href = `${backendUrl}/auth/${provider}?role=${role}`;
+    }
   };
 
   const formFields = [
@@ -208,9 +214,13 @@ const LoginPage = () => {
               >
                 <FaFacebook size={16} /> Continue with Facebook
               </button>
-              <p className="text-sm text-gray-500 text-center">
-                Instagram login is temporarily unavailable due to platform changes.
-              </p>
+              <button
+                type="button"
+                className="w-full cursor-pointer h-12 px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-lg flex justify-center items-center gap-2.5 text-white text-base font-semibold font-['Inter'] leading-normal transition-colors"
+                onClick={() => handleSocialLogin("instagram")}
+              >
+                <FaInstagram size={16} /> Continue with Instagram
+              </button>
             </div>
 
             <div className="self-stretch text-center">

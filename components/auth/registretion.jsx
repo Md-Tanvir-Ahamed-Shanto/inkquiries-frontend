@@ -8,7 +8,7 @@ import { registerArtist, registerClient, claimArtistAccount } from "../../servic
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
-import { FaFacebook } from "react-icons/fa6";
+import { FaFacebook, FaInstagram } from "react-icons/fa6";
 import backendUrl from "@/utils/baseUrl";
 
 const Registration = () => {
@@ -206,6 +206,8 @@ const Registration = () => {
     // The backend handles the OAuth process and redirects back to the frontend with a token.
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
     const role = activeUserType.toLowerCase();
+    
+    // Direct Instagram Business Login
     window.location.href = `${backendUrl}/auth/${provider}?role=${role}`;
   };
 
@@ -321,9 +323,13 @@ const Registration = () => {
               >
                 <FaFacebook size={16} /> Continue with Facebook
               </button>
-              <p className="text-sm text-gray-500 text-center">
-                Instagram login is temporarily unavailable due to platform changes.
-              </p>
+              <button
+                type="button"
+                className="w-full cursor-pointer h-12 px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-lg flex justify-center items-center gap-2.5 text-white text-base font-semibold font-['Inter'] leading-normal transition-colors"
+                onClick={() => handleSocialLogin("instagram")}
+              >
+                <FaInstagram size={16} /> Continue with Instagram
+              </button>
             </div>
 
             <div className="self-stretch text-center">
