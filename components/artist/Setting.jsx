@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Modal from "../common/Modal";
 import DisableModal from "../common/DisableModal";
 import DeleteModal from "../common/DeleteModal";
+import Subscription from "./Subscription";
 import { 
   getMyArtistProfile, 
   updateMyArtistProfile, 
@@ -41,6 +42,7 @@ function Setting() {
   const [deleteModal, setDeleteModal] = useState(false);
   const [disableModal, setDisableModal] = useState(false);
   const [photoLoading, setPhotoLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('profile');
 
 
     const fetchProfileAndSettings = async () => {
@@ -258,19 +260,63 @@ function Setting() {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 mt-8 md:mt-16 flex flex-col gap-8 md:gap-12">
-      {/* General Settings */}
-      <div>
-        <div className="flex flex-col sm:flex-row justify-between mb-6 md:mb-9 items-start sm:items-center">
-          <h1 className="font-semibold text-xl md:text-2xl">General Settings</h1>
-          <button 
-            onClick={handleSaveChanges}
-            disabled={loading}
-            className="w-full sm:w-auto mt-4 sm:mt-0 px-6 py-3 bg-black text-white rounded-lg cursor-pointer text-center disabled:bg-gray-400"
-          >
-            {loading ? 'Saving...' : 'Save Changes'}
-          </button>
+    <div className="w-full max-w-7xl">
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Sidebar Navigation */}
+        <div className="w-full md:w-64 flex-shrink-0">
+          <div className="bg-white rounded-lg p-4 shadow-sm">
+            <h3 className="font-medium text-lg mb-4">Settings</h3>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => setActiveTab('profile')}
+                className={`text-left px-3 py-2 rounded-md ${
+                  activeTab === 'profile'
+                    ? 'bg-black text-white'
+                    : 'hover:bg-gray-100'
+                }`}
+              >
+                Profile
+              </button>
+              <button
+                onClick={() => setActiveTab('security')}
+                className={`text-left px-3 py-2 rounded-md ${
+                  activeTab === 'security'
+                    ? 'bg-black text-white'
+                    : 'hover:bg-gray-100'
+                }`}
+              >
+                Security
+              </button>
+              <button
+                onClick={() => setActiveTab('subscription')}
+                className={`text-left px-3 py-2 rounded-md ${
+                  activeTab === 'subscription'
+                    ? 'bg-black text-white'
+                    : 'hover:bg-gray-100'
+                }`}
+              >
+                Subscription
+              </button>
+            </div>
+          </div>
         </div>
+
+        {/* Main Content Area */}
+        <div className="flex-grow">
+          {activeTab === 'profile' && (
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <h2 className="text-xl font-semibold mb-6">Profile Settings</h2>
+              <div>
+                <div className="flex flex-col sm:flex-row justify-between mb-6 md:mb-9 items-start sm:items-center">
+                  <h1 className="font-semibold text-xl md:text-2xl">General Settings</h1>
+                  <button 
+                    onClick={handleSaveChanges}
+                    disabled={loading}
+                    className="w-full sm:w-auto mt-4 sm:mt-0 px-6 py-3 bg-black text-white rounded-lg cursor-pointer text-center disabled:bg-gray-400"
+                  >
+                    {loading ? 'Saving...' : 'Save Changes'}
+                  </button>
+                </div>
         <div className="flex flex-col gap-6 md:gap-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="w-16 h-16">
@@ -467,12 +513,149 @@ function Setting() {
         </div>
       </div>
 
-      <Modal isOpen={deleteModal} onClose={() => setDeleteModal(false)}>
-        <DeleteModal onClose={() => setDeleteModal(false)} onDelete={handleDeleteAccount} />
-      </Modal>
-      <Modal isOpen={disableModal} onClose={() => setDisableModal(false)}>
-        <DisableModal onClose={() => setDisableModal(false)} onDisable={handleDisableAccount} />
-      </Modal>
+            </div>
+          )}
+
+          {activeTab === 'security' && (
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <h2 className="text-xl font-semibold mb-6">Security Settings</h2>
+              {/* Security Settings Content */}
+              <div>
+                {securityError && (
+                  <div className="text-red-500 mb-4">{securityError}</div>
+                )}
+                {securitySuccess && (
+                  <div className="text-green-500 mb-4">{securitySuccess}</div>
+                )}
+                <div className="flex flex-col gap-6 md:gap-12">
+                  <div>
+                    <h1 className="font-medium text-base md:text-lg">Email Change</h1>
+                    <hr className="text-zinc-200 my-4 md:my-6" />
+                    <div className="w-full flex flex-col sm:flex-row gap-4">
+                      <div className="flex flex-col w-full">
+                        <label className="text-neutral-600 font-medium mb-1">
+                          New email
+                        </label>
+                        <input
+                          type="email"
+                          name="newEmail"
+                          value={securityData.newEmail}
+                          onChange={handleSecurityInputChange}
+                          className="w-full px-4 py-2 border border-zinc-200 text-neutral-600 rounded-lg focus:outline-none"
+                          placeholder="name@example.com"
+                        />
+                      </div>
+                      <div className="flex flex-col w-full">
+                        <label className="text-neutral-600 font-medium mb-1">
+                          Password
+                        </label>
+                        <input
+                          type="password"
+                          name="emailPassword"
+                          value={securityData.emailPassword}
+                          onChange={handleSecurityInputChange}
+                          className="w-full px-4 py-2 border border-zinc-200 text-neutral-600 rounded-lg focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                    <button 
+                      onClick={handleChangeEmail}
+                      disabled={securityLoading || !securityData.newEmail || !securityData.emailPassword}
+                      className="mt-4 px-6 py-2 bg-black text-white rounded-lg cursor-pointer disabled:bg-gray-400"
+                    >
+                      {securityLoading ? 'Updating...' : 'Update Email'}
+                    </button>
+                  </div>
+                  <div>
+                    <h1 className="font-medium text-base md:text-lg">Password Change</h1>
+                    <hr className="text-zinc-200 my-4 md:my-6" />
+                    <div className="w-full flex flex-col md:flex-row gap-4">
+                      <div className="flex flex-col w-full">
+                        <label className="text-neutral-600 font-medium mb-1">
+                          Current password
+                        </label>
+                        <input
+                          type="password"
+                          name="currentPassword"
+                          value={securityData.currentPassword}
+                          onChange={handleSecurityInputChange}
+                          className="w-full px-4 py-2 border border-zinc-200 text-neutral-600 rounded-lg focus:outline-none"
+                        />
+                      </div>
+                      <div className="flex flex-col w-full">
+                        <label className="text-neutral-600 font-medium mb-1">
+                          New password
+                        </label>
+                        <input
+                          type="password"
+                          name="newPassword"
+                          value={securityData.newPassword}
+                          onChange={handleSecurityInputChange}
+                          className="w-full px-4 py-2 border border-zinc-200 text-neutral-600 rounded-lg focus:outline-none"
+                        />
+                      </div>
+                      <div className="flex flex-col w-full">
+                        <label className="text-neutral-600 font-medium mb-1">
+                          Confirm password
+                        </label>
+                        <input
+                          type="password"
+                          name="confirmPassword"
+                          value={securityData.confirmPassword}
+                          onChange={handleSecurityInputChange}
+                          className="w-full px-4 py-2 border border-zinc-200 text-neutral-600 rounded-lg focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                    <button 
+                      onClick={handleChangePassword}
+                      disabled={securityLoading || !securityData.currentPassword || !securityData.newPassword || !securityData.confirmPassword}
+                      className="mt-4 px-6 py-2 bg-black text-white rounded-lg cursor-pointer disabled:bg-gray-400"
+                    >
+                      {securityLoading ? 'Updating...' : 'Update Password'}
+                    </button>
+                  </div>
+                </div>
+                
+                <hr className="text-zinc-200 my-6" />
+                
+                {/* Account Settings */}
+                <div>
+                  <h1 className="font-semibold text-xl md:text-2xl mb-6 md:mb-9">Account Settings</h1>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 md:gap-9">
+                    <div onClick={() => setDeleteModal(true)} className="cursor-pointer">
+                      <p className="text-zinc-500 mb-2">Delete account</p>
+                      <div className="w-40 h-12 bg-red-500 rounded-lg text-white font-semibold flex items-center justify-center text-center">
+                        Delete
+                      </div>
+                    </div>
+                    <div onClick={() => setDisableModal(true)} className="cursor-pointer">
+                      <p className="text-zinc-500 mb-2">Disable account</p>
+                      <div className="w-40 h-12 bg-black rounded-lg text-white font-semibold flex items-center justify-center text-center">
+                        Disable
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {activeTab === 'subscription' && (
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <h2 className="text-xl font-semibold mb-6">Subscription</h2>
+              <Subscription />
+            </div>
+          )}
+
+          <Modal isOpen={deleteModal} onClose={() => setDeleteModal(false)}>
+            <DeleteModal onClose={() => setDeleteModal(false)} onDelete={handleDeleteAccount} />
+          </Modal>
+          <Modal isOpen={disableModal} onClose={() => setDisableModal(false)}>
+            <DisableModal onClose={() => setDisableModal(false)} onDisable={handleDisableAccount} />
+          </Modal>
+        </div>
+      </div>
     </div>
   );
 }
