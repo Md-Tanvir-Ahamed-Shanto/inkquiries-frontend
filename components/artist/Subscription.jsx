@@ -9,47 +9,10 @@ const Subscription = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [responseData, setResponseData] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState('card');
-  const [plans, setPlans] = useState([
-    { 
-      id: 1, 
-      name: 'Basic', 
-      price: 9.99, 
-      features: [
-        'Up to 10 client bookings per month',
-        'Basic portfolio showcase',
-        'Email support'
-      ],
-      recommended: false
-    },
-    { 
-      id: 2, 
-      name: 'Pro', 
-      price: 19.99, 
-      features: [
-        'Up to 30 client bookings per month',
-        'Advanced portfolio showcase',
-        'Priority email support',
-        'Custom booking page'
-      ],
-      recommended: true
-    },
-    { 
-      id: 3, 
-      name: 'Premium', 
-      price: 29.99, 
-      features: [
-        'Unlimited client bookings',
-        'Premium portfolio showcase',
-        '24/7 priority support',
-        'Custom booking page',
-        'Analytics dashboard'
-      ],
-      recommended: false
-    },
-  ]);
+  const [paymentMethod, setPaymentMethod] = useState('hostedPage');
+  const [plans, setPlans] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState(null);
-  const [plansLoading, setPlansLoading] = useState(false);
+  const [plansLoading, setPlansLoading] = useState(true);
   const router = useRouter();
 
   // Fetch subscription plans
@@ -204,7 +167,7 @@ const Subscription = () => {
           planId: selectedPlan.id,
           paymentMethod: paymentMethod === 'hostedPage' ? 'hostedPage' : paymentMethod, 
           cardData: paymentMethod === 'card' ? {
-            number: cardData.cardNumber,
+            number: cardData.cardNumber.replace(/\s/g, ''),
             expirationMonth: cardData.expiryMonth,
             expirationYear: cardData.expiryYear,
             cvv: cardData.cvv,
@@ -214,7 +177,14 @@ const Subscription = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      if (paymentMethod === 'hostedPage' && response.data.paymentPageUrl) {
+      if (paymentMethod === 'hostedPage' && response.data.paymentPageHtml) {
+        // Create a temporary container and write the HTML response
+        // This is necessary because the response is a full HTML page with a form that auto-submits
+        document.open();
+        document.write(response.data.paymentPageHtml);
+        document.close();
+        return;
+      } else if (paymentMethod === 'hostedPage' && response.data.paymentPageUrl) {
         window.location.href = response.data.paymentPageUrl;
         return;
       }
@@ -297,6 +267,7 @@ const Subscription = () => {
           <button
             type="button"
             onClick={() => handlePaymentMethodChange('card')}
+            disabled={paymentMethod === 'hostedPage'}
             className={`flex items-center px-4 py-3 border rounded-lg transition-colors ${paymentMethod === 'card'
               ? 'border-blue-500 bg-blue-50 text-blue-700'
               : 'border-gray-300 hover:bg-gray-50'}`}

@@ -67,7 +67,7 @@ const nextConfig = {
   
   // Environment variables
   env: {
-    NEXT_PUBLIC_API_URL: 'https://api.inkquiries.org',
+    NEXT_PUBLIC_API_URL: 'http://localhost:5000',
   },
   
   // Performance optimizations
